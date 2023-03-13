@@ -1,11 +1,11 @@
-import { render, RenderPosition } from './render';
+import { render } from './render';
 import FiltersView from './view/filters';
 import Trip from './presenter/trip';
 
 
-const filtersContainer = document.querySelector('.trip-controls__filters');
-const tripContainer = document.querySelector('.trip-events');
-const tripPresenter = new Trip({container: tripContainer});
+const filtersContainerElement = document.querySelector('.trip-controls__filters');
+const tripContainerElement = document.querySelector('.trip-events');
+const tripPresenter = new Trip(tripContainerElement);
 
-render(new FiltersView(), filtersContainer, RenderPosition.BEFOREEND);
+render(new FiltersView(), filtersContainerElement);
 tripPresenter.init();
