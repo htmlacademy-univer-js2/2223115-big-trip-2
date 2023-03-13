@@ -1,5 +1,5 @@
 import { getRandomInteger } from '../utils';
-import { generateDestination } from './destination';
+import generateDestination from './destination';
 
 const TYPE_POINT = [
   'taxi',

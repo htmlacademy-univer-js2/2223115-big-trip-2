@@ -6,9 +6,11 @@ import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
 
 class Trip {
-  constructor(container) {
+  constructor(container, pointsModel) {
     this.component = new TripListView();
     this.container = container;
+    this.pointsModel = pointsModel;
+    this.listPoints = this.pointsModel.getPoints();
   }
 
   init() {
@@ -17,8 +19,8 @@ class Trip {
     render(new NewPointView(), this.component.getElement());
     render(new EditPointView(), this.component.getElement());
 
-    for (let i = 0; i < 3; i++) {
-      render(new PointView(), this.component.getElement());
+    for (let i = 0; i < this.listPoints.length; i++) {
+      render(new PointView(this.listPoints[i]), this.component.getElement());
     }
   }
 }
