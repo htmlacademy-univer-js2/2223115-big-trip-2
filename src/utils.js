@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -5,4 +7,7 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export {getRandomInteger};
+const humanizeDate = (date) => dayjs(date).format('D MMMM');
+const humanizeTime = (date) => dayjs(date).format('HH:mm');
+
+export {getRandomInteger, humanizeDate, humanizeTime};
