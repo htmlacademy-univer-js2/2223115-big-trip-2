@@ -8,7 +8,8 @@ const createPointTemplate = (point) => {
     destination,
     dateFrom,
     dateTo,
-    isFavorite} = point;
+    isFavorite,
+    offers} = point;
 
   const date = dateFrom !== null
     ? humanizeDate(dateFrom)
@@ -25,6 +26,26 @@ const createPointTemplate = (point) => {
   const timeTo = dateTo !== null
     ? humanizeTime(dateTo)
     : '11:00';
+
+  const getTemplateOffer = (offer) => (
+    `<li class="event__offer">
+      <span class="event__offer-title">${offer['title']}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${offer['price']}</span>
+    </li>`);
+
+  const createOffersElement = () => {
+    let container ='';
+    if (offers['offers'].length === 0) {
+      return '';
+    } else {
+      for (let i = 0; i < offers['offers'].length; i++) {
+        container += getTemplateOffer(offers['offers'][i]);
+      }
+    }
+    return container;
+  };
+
 
   return (
     `<li class="trip-events__item">
@@ -46,13 +67,7 @@ const createPointTemplate = (point) => {
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">
-        <li class="event__offer">
-            <span class="event__offer-title">Order Uber</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">20</span>
-        </li>
-        </ul>
+        <ul class="event__selected-offers">${createOffersElement()}</ul>
         <button class="event__favorite-btn ${favoriteClassName}" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">

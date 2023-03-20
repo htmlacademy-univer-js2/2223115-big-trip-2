@@ -1,5 +1,6 @@
 import { getRandomInteger } from '../utils';
 import generateDestination from './destination';
+import generateOffersByType from './offer';
 
 const TYPE_POINT = [
   'taxi',
@@ -26,7 +27,7 @@ const generatePoint = () => ({
   'dateTo': '2019-07-11T11:22:13.375Z',
   'destination': generateDestination(),
   'isFavorite': identifyFavorite(),
-  'offers': [],
+  'offers': generateOffersByType(),
   'type': generateTypePoint()
 });
 

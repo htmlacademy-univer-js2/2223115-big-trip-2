@@ -18,7 +18,6 @@ class Trip {
     render(this.component, this.container);
     render(new NewPointView(), this.component.getElement());
     render(new EditPointView(), this.component.getElement());
-
     for (let i = 0; i < this.listPoints.length; i++) {
       render(new PointView(this.listPoints[i]), this.component.getElement());
     }
