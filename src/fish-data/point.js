@@ -1,18 +1,8 @@
 import { getRandomInteger } from '../utils';
 import generateDestination from './destination';
 import generateOffersByType from './offer';
+import { TYPE_POINT } from '../const';
 
-const TYPE_POINT = [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant'
-];
 
 const generateTypePoint = () => TYPE_POINT[getRandomInteger(0, TYPE_POINT.length - 1)];
 

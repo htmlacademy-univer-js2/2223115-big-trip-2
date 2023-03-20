@@ -1,28 +1,6 @@
 import { getRandomInteger } from '../utils';
+import { TITLE_OFFER, TYPE_POINT } from '../const';
 
-const TYPE_POINT = [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant'
-];
-
-const TITLE_OFFER = [
-  'Add a child safety seat',
-  'Stay overnight',
-  'Add lunch',
-  'Rent a polaroid',
-  'Add a place for a pet',
-  'Book a window seat',
-  'Book a place in the recreation area',
-  'Use the translator service',
-  'Upgrade to a business class'
-];
 
 const generateTypeOffers = () => TYPE_POINT[getRandomInteger(0, TYPE_POINT.length - 1)];
 const generateTitleOffer = () => TITLE_OFFER[getRandomInteger(0, TITLE_OFFER.length - 1)];
