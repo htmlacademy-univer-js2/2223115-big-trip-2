@@ -1,5 +1,6 @@
 import { createElement } from '../render';
-import { humanizeDate, humanizeTime } from '../utils';
+import { humanizeDate, humanizeTime, getDifference } from '../utils';
+
 
 const createPointTemplate = (point) => {
   const {
@@ -27,6 +28,24 @@ const createPointTemplate = (point) => {
     ? humanizeTime(dateTo)
     : '11:00';
 
+  const formattingDate = (diffDate) => diffDate < 10? `0${diffDate}`: `${diffDate}`;
+
+  const calculateTimeSpent = () => {
+    const differenceDays = formattingDate(getDifference(dateFrom, dateTo, 'day'));
+    const differenceHours = formattingDate(getDifference(dateFrom, dateTo, 'hour') - differenceDays * 24);
+    const differenceMinute = formattingDate(getDifference(dateFrom, dateTo, 'minute') - differenceDays * 24 * 60 - differenceHours * 60 + 1);
+
+    if (differenceDays !== '00') {
+      return `${differenceDays}D ${differenceHours}H ${differenceMinute}M`;
+    }
+
+    if (differenceHours !== '00') {
+      return `${differenceHours}H ${differenceMinute}M`;
+    }
+
+    return `${differenceMinute}M`;
+  };
+
   const getTemplateOffer = (offer) => (
     `<li class="event__offer">
       <span class="event__offer-title">${offer['title']}</span>
@@ -36,6 +55,7 @@ const createPointTemplate = (point) => {
 
   const createOffersElement = () => {
     let container ='';
+
     if (offers['offers'].length === 0) {
       return '';
     } else {
@@ -43,6 +63,7 @@ const createPointTemplate = (point) => {
         container += getTemplateOffer(offers['offers'][i]);
       }
     }
+
     return container;
   };
 
@@ -61,7 +82,7 @@ const createPointTemplate = (point) => {
             &mdash;
             <time class="event__end-time" datetime="2019-03-18T11:00">${timeTo}</time>
         </p>
-        <p class="event__duration">30M</p>
+        <p class="event__duration">${calculateTimeSpent()}</p>
         </div>
         <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

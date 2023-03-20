@@ -19,7 +19,7 @@ const DESCRIPTIONS = [
   'In rutrum ac purus sit amet tempus.'
 ];
 
-const TITLE_OFFER = [
+const TITLES_OFFER = [
   'Add a child safety seat',
   'Stay overnight',
   'Add lunch',
@@ -31,7 +31,7 @@ const TITLE_OFFER = [
   'Upgrade to a business class'
 ];
 
-const TYPE_POINT = [
+const TYPES_POINT = [
   'taxi',
   'bus',
   'train',
@@ -45,7 +45,7 @@ const TYPE_POINT = [
 
 export {
   CITIES,
-  TITLE_OFFER,
+  TITLES_OFFER,
   DESCRIPTIONS,
-  TYPE_POINT
+  TYPES_POINT
 };

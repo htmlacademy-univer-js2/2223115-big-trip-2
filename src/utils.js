@@ -9,5 +9,6 @@ const getRandomInteger = (a = 0, b = 1) => {
 
 const humanizeDate = (date) => dayjs(date).format('D MMMM');
 const humanizeTime = (date) => dayjs(date).format('HH:mm');
+const getDifference = (date1, date2, param) => dayjs(date2).diff(date1, param);
 
-export {getRandomInteger, humanizeDate, humanizeTime};
+export {getRandomInteger, humanizeDate, humanizeTime, getDifference};
