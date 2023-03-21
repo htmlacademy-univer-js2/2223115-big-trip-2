@@ -15,18 +15,18 @@ const generateDescription = () => {
 
 const generateCity = () => CITIES[getRandomInteger(0, CITIES.length - 1)];
 
-const generateSrc = () => `http://picsum.photos/300/200?r=${getRandomInteger(1, 10)}`;
+const generateSrc = () => `http://picsum.photos/300/200?r=${getRandomInteger(1, 20)}`;
+
+const generatePhoto = () => ({
+  'src': generateSrc(),
+  'description': generateDescription()
+});
 
 const generateDestination = () => ({
   'id': 1,
   'description': generateDescription(),
   'name': generateCity(),
-  'pictures': [
-    {
-      'src': generateSrc(),
-      'description': generateDescription(),
-    }
-  ]
+  'pictures': Array.from({length: getRandomInteger(1,6)}, generatePhoto)
 });
 
 export default generateDestination;

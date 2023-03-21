@@ -13,7 +13,7 @@ const createPointTemplate = (point) => {
     offers} = point;
 
   const date = dateFrom !== null
-    ? humanizeDate(dateFrom)
+    ? humanizeDate(dateFrom, 'D MMMM')
     : 'June 9';
 
   const favoriteClassName = isFavorite
