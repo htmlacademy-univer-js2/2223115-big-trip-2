@@ -1,5 +1,6 @@
 import { createElement } from '../render';
 import { humanizeDate, humanizeTime, getDifference } from '../utils';
+import OffersByType from '../fish-data/offer';
 
 
 const createPointTemplate = (point) => {
@@ -46,24 +47,27 @@ const createPointTemplate = (point) => {
     return `${differenceMinute}M`;
   };
 
-  const getTemplateOffer = (offer) => (
-    `<li class="event__offer">
-      <span class="event__offer-title">${offer['title']}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer['price']}</span>
-    </li>`);
+  const getTemplateOffer = (id) => {
+    const currentOffers = OffersByType.find((x) => x.type === type);
+    const currentOffer = currentOffers['offers'].find((x) => x.id === id);
+    return(
+      `<li class="event__offer">
+            <span class="event__offer-title">${currentOffer['title']}</span>
+            &plus;&euro;&nbsp;
+            <span class="event__offer-price">${currentOffer['price']}</span>
+          </li>`);
+  };
 
   const createOffersElement = () => {
-    let container ='';
+    let container = '';
 
-    if (offers['offers'].length === 0) {
+    if (offers.length === 0) {
       return '';
     } else {
-      for (let i = 0; i < offers['offers'].length; i++) {
-        container += getTemplateOffer(offers['offers'][i]);
+      for (let i = 1; i <= offers.length; i++) {
+        container += getTemplateOffer(i);
       }
     }
-
     return container;
   };
 

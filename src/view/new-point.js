@@ -1,5 +1,6 @@
 import { createElement } from '../render';
 import { humanizeDate, humanizeTime } from '../utils';
+import OffersByType from '../fish-data/offer';
 
 const createNewPointTemplate = (point = {}) => {
   const {
@@ -19,18 +20,7 @@ const createNewPointTemplate = (point = {}) => {
     },
     dateFrom = '2019-07-10T22:55:56.845Z',
     dateTo = '2019-07-11T11:22:13.375Z',
-    offers = {
-      'offers': [
-        {
-          'title': 'Add lunch',
-          'price': 30
-        },
-        {
-          'title': 'Use the translator service',
-          'price': 70
-        }
-      ]
-    }
+    offers = [1]
   } = point;
 
   const checkTypeDestination = (currentType) => {
@@ -41,27 +31,31 @@ const createNewPointTemplate = (point = {}) => {
     return '';
   };
 
-  const getTemplateOffer = (offer) => (
-    `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-        <label class="event__offer-label" for="event-offer-comfort-1">
-      <span class="event__offer-title">${offer['title']}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer['price']}</span>
-        </label>
-      </div>`);
+  const getTemplateOffer = (id) => {
+    const currentOffers = OffersByType.find((x) => x.type === type);
+    const currentOffer = currentOffers['offers'].find((x) => x.id === id);
+    return(
+      `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
+      <label class="event__offer-label" for="event-offer-comfort-1">
+    <span class="event__offer-title">${currentOffer['title']}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${currentOffer['price']}</span>
+      </label>
+    </div>`);
+  };
+
 
   const createOffersElement = () => {
-    let container ='';
+    let container = '';
 
-    if (offers['offers'].length === 0) {
+    if (offers.length === 0) {
       return '';
     } else {
-      for (let i = 0; i < offers['offers'].length; i++) {
-        container += getTemplateOffer(offers['offers'][i]);
+      for (let i = 1; i <= offers.length; i++) {
+        container += getTemplateOffer(i);
       }
     }
-
     return container;
   };
 

@@ -43,9 +43,13 @@ const TYPES_POINT = [
   'restaurant'
 ];
 
+const COUNT_POINT = 20;
+
 export {
   CITIES,
   TITLES_OFFER,
   DESCRIPTIONS,
-  TYPES_POINT
+  TYPES_POINT,
+  COUNT_POINT
 };
+

@@ -1,5 +1,6 @@
 import { createElement } from '../render';
 import { humanizeDate, humanizeTime } from '../utils';
+import OffersByType from '../fish-data/offer';
 
 const createEditPointTemplate = (point) => {
   const {
@@ -19,27 +20,31 @@ const createEditPointTemplate = (point) => {
     return '';
   };
 
-  const getTemplateOffer = (offer) => (
-    `<div class="event__offer-selector">
+  const getTemplateOffer = (id) => {
+    const currentOffers = OffersByType.find((x) => x.type === type);
+    const currentOffer = currentOffers['offers'].find((x) => x.id === id);
+    return(
+      `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
       <label class="event__offer-label" for="event-offer-comfort-1">
-    <span class="event__offer-title">${offer['title']}</span>
+    <span class="event__offer-title">${currentOffer['title']}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer['price']}</span>
+      <span class="event__offer-price">${currentOffer['price']}</span>
       </label>
     </div>`);
+  };
+
 
   const createOffersElement = () => {
-    let container ='';
+    let container = '';
 
-    if (offers['offers'].length === 0) {
+    if (offers.length === 0) {
       return '';
     } else {
-      for (let i = 0; i < offers['offers'].length; i++) {
-        container += getTemplateOffer(offers['offers'][i]);
+      for (let i = 1; i <= offers.length; i++) {
+        container += getTemplateOffer(i);
       }
     }
-
     return container;
   };
 
