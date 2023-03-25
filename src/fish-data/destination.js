@@ -22,11 +22,13 @@ const generatePhoto = () => ({
   'description': generateDescription()
 });
 
-const generateDestination = () => ({
-  'id': 1,
+const generateDestination = (id) => ({
+  'id': id,
   'description': generateDescription(),
   'name': generateCity(),
   'pictures': Array.from({length: getRandomInteger(1,6)}, generatePhoto)
 });
 
-export default generateDestination;
+const Destinations = [generateDestination(1), generateDestination(2)];
+
+export default Destinations;

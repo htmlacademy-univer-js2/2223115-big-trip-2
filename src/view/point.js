@@ -1,6 +1,7 @@
 import { createElement } from '../render';
 import { humanizeDate, humanizeTime, getDifference } from '../utils';
 import OffersByType from '../fish-data/offer';
+import Destinations from '../fish-data/destination';
 
 
 const createPointTemplate = (point) => {
@@ -47,6 +48,8 @@ const createPointTemplate = (point) => {
     return `${differenceMinute}M`;
   };
 
+  const getDestinationDate = () => Destinations.find((x) => x.id === destination);
+
   const getTemplateOffer = (id) => {
     const currentOffers = OffersByType.find((x) => x.type === type);
     const currentOffer = currentOffers['offers'].find((x) => x.id === id);
@@ -71,7 +74,6 @@ const createPointTemplate = (point) => {
     return container;
   };
 
-
   return (
     `<li class="trip-events__item">
     <div class="event">
@@ -79,7 +81,7 @@ const createPointTemplate = (point) => {
         <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
         </div>
-        <h3 class="event__title">${type} ${destination.name}</h3>
+        <h3 class="event__title">${type} ${getDestinationDate().name}</h3>
         <div class="event__schedule">
         <p class="event__time">
             <time class="event__start-time" datetime="2019-03-18T10:30">${timeFrom}</time>
