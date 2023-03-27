@@ -102,19 +102,19 @@ class PointView {
     this.destination = destination;
   }
 
-  getTemplate() {
+  get _template() {
     return createPointTemplate(this.point, this.offers, this.destination);
   }
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if(!this._element) {
+      this._element = createElement(this._template);
     }
-    return this.element;
+    return this._element;
   }
 
   removeElement() {
-    this.element = null;
+    this._element = null;
   }
 }
 

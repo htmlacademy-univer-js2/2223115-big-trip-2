@@ -180,24 +180,24 @@ const createEditPointTemplate = (point, currentOffers, currentDestination) => {
 
 class EditPointView {
   constructor(point, offers, destination) {
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
+    this._point = point;
+    this._offers = offers;
+    this._destination = destination;
   }
 
-  getTemplate() {
-    return createEditPointTemplate(this.point, this.offers, this.destination);
+  get _template() {
+    return createEditPointTemplate(this._point, this._offers, this._destination);
   }
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if(!this._element) {
+      this._element = createElement(this._template);
     }
-    return this.element;
+    return this._element;
   }
 
   removeElement() {
-    this.element = null;
+    this._element = null;
   }
 }
 

@@ -184,24 +184,24 @@ const createNewPointTemplate = (allOffers, allDestination, point = {}) => {
 
 class NewPointView {
   constructor(offers, destination, point) {
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
+    this._point = point;
+    this._offers = offers;
+    this._destination = destination;
   }
 
-  getTemplate() {
-    return createNewPointTemplate(this.offers, this.destination, this.point);
+  get _template() {
+    return createNewPointTemplate(this._offers, this._destination, this._point);
   }
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if(!this._element) {
+      this._element = createElement(this._template);
     }
-    return this.element;
+    return this._element;
   }
 
   removeElement() {
-    this.element = null;
+    this._element = null;
   }
 }
 
