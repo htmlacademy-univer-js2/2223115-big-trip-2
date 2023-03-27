@@ -1,9 +1,8 @@
 import { createElement } from '../render';
 import { humanizeDate, humanizeTime } from '../utils';
-import offersByType from '../fish-data/offer';
 import destinations from '../fish-data/destination';
 
-const createNewPointTemplate = (point = {}) => {
+const createNewPointTemplate = (allOffers, point = {}) => {
   const {
     type = 'taxi',
     basePrice = 99,
@@ -46,7 +45,7 @@ const createNewPointTemplate = (point = {}) => {
   };
 
   const createOffersElement = () => {
-    const currentOffers = offersByType.find((x) => x.type === type);
+    const currentOffers = allOffers.find((x) => x.type === type);
     const offersView = currentOffers['offers'].map(getTemplateOffer);
 
     return offersView.join(' ');
@@ -185,12 +184,13 @@ const createNewPointTemplate = (point = {}) => {
 };
 
 class NewPointView {
-  constructor(point) {
+  constructor(offers, point) {
     this.point = point;
+    this.offers = offers;
   }
 
   getTemplate() {
-    return createNewPointTemplate(this.point);
+    return createNewPointTemplate(this.offers, this.point);
   }
 
   getElement() {
