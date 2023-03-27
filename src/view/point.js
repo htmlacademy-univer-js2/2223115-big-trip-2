@@ -1,7 +1,7 @@
 import { createElement } from '../render';
 import { humanizeDate, humanizeTime, getDifference } from '../utils';
-import OffersByType from '../fish-data/offer';
-import Destinations from '../fish-data/destination';
+import offersByType from '../fish-data/offer';
+import destinations from '../fish-data/destination';
 
 
 const createPointTemplate = (point) => {
@@ -48,30 +48,24 @@ const createPointTemplate = (point) => {
     return `${differenceMinute}M`;
   };
 
-  const getDestinationDate = () => Destinations.find((x) => x.id === destination);
+  const getDestinationDate = () => destinations.find((x) => x.id === destination);
 
-  const getTemplateOffer = (id) => {
-    const currentOffers = OffersByType.find((x) => x.type === type);
-    const currentOffer = currentOffers['offers'].find((x) => x.id === id);
-    return(
-      `<li class="event__offer">
-            <span class="event__offer-title">${currentOffer['title']}</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">${currentOffer['price']}</span>
-          </li>`);
+  const getTemplateOffer = (offer) => {
+    if (offers.find((x) => x === offer['id'])) {
+      return(
+        `<li class="event__offer">
+              <span class="event__offer-title">${offer['title']}</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">${offer['price']}</span>
+            </li>`);
+    }
   };
 
   const createOffersElement = () => {
-    let container = '';
+    const currentOffers = offersByType.find((x) => x.type === type);
+    const offersView = currentOffers['offers'].map(getTemplateOffer);
 
-    if (offers.length === 0) {
-      return '';
-    } else {
-      for (let i = 1; i <= offers.length; i++) {
-        container += getTemplateOffer(i);
-      }
-    }
-    return container;
+    return offersView.join(' ');
   };
 
   return (

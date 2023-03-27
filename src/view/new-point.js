@@ -1,7 +1,7 @@
 import { createElement } from '../render';
 import { humanizeDate, humanizeTime } from '../utils';
-import OffersByType from '../fish-data/offer';
-import Destinations from '../fish-data/destination';
+import offersByType from '../fish-data/offer';
+import destinations from '../fish-data/destination';
 
 const createNewPointTemplate = (point = {}) => {
   const {
@@ -45,40 +45,24 @@ const createNewPointTemplate = (point = {}) => {
     }
   };
 
-
   const createOffersElement = () => {
-    let container = '';
+    const currentOffers = offersByType.find((x) => x.type === type);
+    const offersView = currentOffers['offers'].map(getTemplateOffer);
 
-    if (offers.length === 0) {
-      return '';
-    } else {
-      const currentOffers = OffersByType.find((x) => x.type === type);
-      for (let i = 0; i < currentOffers['offers'].length; i++) {
-        container += getTemplateOffer(currentOffers['offers'][i]);
-      }
-    }
-    return container;
+    return offersView.join(' ');
   };
 
-  const getDestinationDate = () => Destinations.find((x) => x.id === destination);
+  const getDestinationDate = () => destinations.find((x) => x.id === destination);
 
   const getTemplatePhoto = (photo) => (
     `<img class="event__photo" src="${photo['src']}" alt="Event photo">`
   );
 
   const createPhotosElement = () => {
-    let container = '';
     const currentDesctination = getDestinationDate();
+    const photosView = currentDesctination['pictures'].map(getTemplatePhoto);
 
-    if (currentDesctination['pictures'].length === 0) {
-      return '';
-    } else {
-      for (let i = 0; i < currentDesctination['pictures'].length; i++) {
-        container += getTemplatePhoto(currentDesctination['pictures'][i]);
-      }
-    }
-
-    return container;
+    return photosView.join(' ');
   };
 
   return(
