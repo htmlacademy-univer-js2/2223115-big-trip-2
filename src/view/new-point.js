@@ -1,8 +1,7 @@
 import { createElement } from '../render';
 import { humanizeDate, humanizeTime } from '../utils';
-import destinations from '../fish-data/destination';
 
-const createNewPointTemplate = (allOffers, point = {}) => {
+const createNewPointTemplate = (allOffers, allDestination, point = {}) => {
   const {
     type = 'taxi',
     basePrice = 99,
@@ -51,7 +50,7 @@ const createNewPointTemplate = (allOffers, point = {}) => {
     return offersView.join(' ');
   };
 
-  const getDestinationDate = () => destinations.find((x) => x.id === destination);
+  const getDestinationDate = () => allDestination.find((x) => x.id === destination);
 
   const getTemplatePhoto = (photo) => (
     `<img class="event__photo" src="${photo['src']}" alt="Event photo">`
@@ -184,13 +183,14 @@ const createNewPointTemplate = (allOffers, point = {}) => {
 };
 
 class NewPointView {
-  constructor(offers, point) {
+  constructor(offers, destination, point) {
     this.point = point;
     this.offers = offers;
+    this.destination = destination;
   }
 
   getTemplate() {
-    return createNewPointTemplate(this.offers, this.point);
+    return createNewPointTemplate(this.offers, this.destination, this.point);
   }
 
   getElement() {

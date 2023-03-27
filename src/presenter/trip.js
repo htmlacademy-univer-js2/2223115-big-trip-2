@@ -15,13 +15,21 @@ class Trip {
 
   init() {
     render(new SortView(), this.container);
+
     render(this.component, this.container);
-    render(new NewPointView(this.pointsModel.getOffers()), this.component.getElement());
-    render(new EditPointView(this.listPoints[0], this.pointsModel.getOffers(this.listPoints[0])), this.component.getElement());
+
+    render(new NewPointView(this.pointsModel.getOffers(),
+      this.pointsModel.getDestination()), this.component.getElement());
+
+    render(new EditPointView(this.listPoints[0],
+      this.pointsModel.getOffers(this.listPoints[0]),
+      this.pointsModel.getDestination(this.listPoints[0])), this.component.getElement());
+
     for (let i = 0; i < this.listPoints.length; i++) {
       const currentPoint = this.listPoints[i];
       const curretnOffers = this.pointsModel.getOffers(currentPoint);
-      render(new PointView(currentPoint, curretnOffers), this.component.getElement());
+      const currentDesctination = this.pointsModel.getDestination(currentPoint);
+      render(new PointView(currentPoint, curretnOffers,currentDesctination), this.component.getElement());
     }
   }
 }

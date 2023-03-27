@@ -1,12 +1,11 @@
 import { createElement } from '../render';
 import { humanizeDate, humanizeTime } from '../utils';
-import destinations from '../fish-data/destination';
 
-const createEditPointTemplate = (point, currentOffers) => {
+
+const createEditPointTemplate = (point, currentOffers, currentDestination) => {
   const {
     type,
     basePrice,
-    destination,
     dateFrom,
     dateTo,
     offers} = point;
@@ -50,15 +49,12 @@ const createEditPointTemplate = (point, currentOffers) => {
     return offersView.join(' ');
   };
 
-  const getDestinationDate = () => destinations.find((x) => x.id === destination);
-
   const getTemplatePhoto = (photo) => (
     `<img class="event__photo" src="${photo['src']}" alt="Event photo">`
   );
 
   const createPhotosElement = () => {
-    const currentDesctination = getDestinationDate();
-    const photosView = currentDesctination['pictures'].map(getTemplatePhoto);
+    const photosView = currentDestination['pictures'].map(getTemplatePhoto);
 
     return photosView.join(' ');
   };
@@ -130,7 +126,7 @@ const createEditPointTemplate = (point, currentOffers) => {
               <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
               </label>
-              <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${getDestinationDate()['name']}" list="destination-list-1">
+              <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${currentDestination['name']}" list="destination-list-1">
               <datalist id="destination-list-1">
               <option value="Amsterdam"></option>
               <option value="Geneva"></option>
@@ -168,7 +164,7 @@ const createEditPointTemplate = (point, currentOffers) => {
 
           <section class="event__section  event__section--destination">
               <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-              <p class="event__destination-description">${getDestinationDate()['description']}</p>
+              <p class="event__destination-description">${currentDestination['description']}</p>
 
               <div class="event__photos-container">
               <div class="event__photos-tape">
@@ -183,13 +179,14 @@ const createEditPointTemplate = (point, currentOffers) => {
 };
 
 class EditPointView {
-  constructor(point, offers) {
+  constructor(point, offers, destination) {
     this.point = point;
     this.offers = offers;
+    this.destination = destination;
   }
 
   getTemplate() {
-    return createEditPointTemplate(this.point, this.offers);
+    return createEditPointTemplate(this.point, this.offers, this.destination);
   }
 
   getElement() {

@@ -1,13 +1,10 @@
 import { createElement } from '../render';
 import { humanizeDate, humanizeTime, getDifference } from '../utils';
-import destinations from '../fish-data/destination';
 
-
-const createPointTemplate = (point, currentOffers) => {
+const createPointTemplate = (point, currentOffers, currentDesctination) => {
   const {
     type,
     basePrice,
-    destination,
     dateFrom,
     dateTo,
     isFavorite,
@@ -47,8 +44,6 @@ const createPointTemplate = (point, currentOffers) => {
     return `${differenceMinute}M`;
   };
 
-  const getDestinationDate = () => destinations.find((x) => x.id === destination);
-
   const getTemplateOffer = (offer) => {
     if (offers.find((x) => x === offer['id'])) {
       return(
@@ -73,7 +68,7 @@ const createPointTemplate = (point, currentOffers) => {
         <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
         </div>
-        <h3 class="event__title">${type} ${getDestinationDate().name}</h3>
+        <h3 class="event__title">${type} ${currentDesctination['name']}</h3>
         <div class="event__schedule">
         <p class="event__time">
             <time class="event__start-time" datetime="2019-03-18T10:30">${timeFrom}</time>
@@ -101,13 +96,14 @@ const createPointTemplate = (point, currentOffers) => {
   );};
 
 class PointView {
-  constructor(point, offers) {
+  constructor(point, offers, destination) {
     this.point = point;
     this.offers = offers;
+    this.destination = destination;
   }
 
   getTemplate() {
-    return createPointTemplate(this.point, this.offers);
+    return createPointTemplate(this.point, this.offers, this.destination);
   }
 
   getElement() {
