@@ -1,9 +1,7 @@
 import { createElement } from '../render';
 import { humanizeDate, humanizeTime } from '../utils';
-import OffersByType from '../fish-data/offer';
-import Destinations from '../fish-data/destination';
 
-const createNewPointTemplate = (point = {}) => {
+const createNewPointTemplate = (allOffers, allDestination, point = {}) => {
   const {
     type = 'taxi',
     basePrice = 99,
@@ -45,40 +43,24 @@ const createNewPointTemplate = (point = {}) => {
     }
   };
 
-
   const createOffersElement = () => {
-    let container = '';
+    const currentOffers = allOffers.find((x) => x.type === type);
+    const offersView = currentOffers['offers'].map(getTemplateOffer);
 
-    if (offers.length === 0) {
-      return '';
-    } else {
-      const currentOffers = OffersByType.find((x) => x.type === type);
-      for (let i = 0; i < currentOffers['offers'].length; i++) {
-        container += getTemplateOffer(currentOffers['offers'][i]);
-      }
-    }
-    return container;
+    return offersView.join(' ');
   };
 
-  const getDestinationDate = () => Destinations.find((x) => x.id === destination);
+  const getDestinationDate = () => allDestination.find((x) => x.id === destination);
 
   const getTemplatePhoto = (photo) => (
     `<img class="event__photo" src="${photo['src']}" alt="Event photo">`
   );
 
   const createPhotosElement = () => {
-    let container = '';
     const currentDesctination = getDestinationDate();
+    const photosView = currentDesctination['pictures'].map(getTemplatePhoto);
 
-    if (currentDesctination['pictures'].length === 0) {
-      return '';
-    } else {
-      for (let i = 0; i < currentDesctination['pictures'].length; i++) {
-        container += getTemplatePhoto(currentDesctination['pictures'][i]);
-      }
-    }
-
-    return container;
+    return photosView.join(' ');
   };
 
   return(
@@ -201,23 +183,25 @@ const createNewPointTemplate = (point = {}) => {
 };
 
 class NewPointView {
-  constructor(point) {
-    this.point = point;
+  constructor(offers, destination, point) {
+    this._point = point;
+    this._offers = offers;
+    this._destination = destination;
   }
 
-  getTemplate() {
-    return createNewPointTemplate(this.point);
+  get _template() {
+    return createNewPointTemplate(this._offers, this._destination, this._point);
   }
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if(!this._element) {
+      this._element = createElement(this._template);
     }
-    return this.element;
+    return this._element;
   }
 
   removeElement() {
-    this.element = null;
+    this._element = null;
   }
 }
 
