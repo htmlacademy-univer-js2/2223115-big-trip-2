@@ -4,6 +4,7 @@ import EditPointView from '../view/edit-point';
 import NewPointView from '../view/new-point';
 import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
+import FirstMessageView from '../view/first-message';
 
 class Trip {
   constructor(container, pointsModel) {
@@ -14,6 +15,7 @@ class Trip {
   }
 
   init() {
+    render(new FirstMessageView(), this._container);
     render(new SortView(), this._container);
     render(this._component, this._container);
 

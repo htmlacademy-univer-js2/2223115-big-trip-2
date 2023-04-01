@@ -1,12 +1,16 @@
 import { createElement } from '../render';
 
-const createFirstMessage= () => (
-  'p class="trip-events__msg">Click New Event to create your first point</p>'
+const createFirstMessage = (message) => (
+  `<p class="trip-events__msg">${message}</p>`
 );
 
 class FirstMessageView {
+  constructor() {
+    this._message = 'Click New Event to create your first point';
+  }
+
   get _template() {
-    return createFirstMessage();
+    return createFirstMessage(this._message);
   }
 
   get element() {
