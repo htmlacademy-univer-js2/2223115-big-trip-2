@@ -6,15 +6,20 @@ import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
 import FirstMessageView from '../view/first-message';
 
-class Trip {
+class TripPresenter {
   constructor(container, pointsModel) {
     this._ULcomponent = new TripListView();
     this._container = container;
     this._pointsModel = pointsModel;
-    this._listPoints = this._pointsModel.points;
+    this._listPoints = [];
   }
 
   init() {
+    this._listPoints = this._pointsModel.points;
+    this._renderTrip();
+  }
+
+  _renderTrip() {
     if (this._listPoints.length === 0) {
       render(new FirstMessageView(), this._container);
     }
@@ -77,8 +82,6 @@ class Trip {
 
     return render(pointComponent, this._ULcomponent.element);
   }
-
-
 }
 
-export default Trip;
+export default TripPresenter;

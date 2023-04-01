@@ -1,6 +1,6 @@
 import { createElement } from '../render';
 
-const createFirstMessage = (message) => (
+const createFirstMessageTeplate = (message) => (
   `<p class="trip-events__msg">${message}</p>`
 );
 
@@ -10,7 +10,7 @@ class FirstMessageView {
   }
 
   get _template() {
-    return createFirstMessage(this._message);
+    return createFirstMessageTeplate(this._message);
   }
 
   get element() {
