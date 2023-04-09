@@ -59,25 +59,19 @@ class TripPresenter {
       }
     };
 
-    const onSaveButtonClick = (evt) => {
-      evt.preventDefault();
-      replaceFormToPoint();
-      pointEditComponent.element.removeEventListener('submit', onSaveButtonClick);
-    };
-
-    const onRollupButtonClick = () => {
-      replaceFormToPoint();
-      pointEditComponent.element.removeEventListener('click', onRollupButtonClick);
-    };
-
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointComponent.setEditClickHandler(() => {
       replacePointToForm();
-
       document.addEventListener('keydown', onEscKeyDown);
+    });
 
-      pointEditComponent.element.querySelector('form').addEventListener('submit', onSaveButtonClick);
+    pointEditComponent.setFormSubmitHandler(() => {
+      replaceFormToPoint()
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
 
-      pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('click', onRollupButtonClick);
+    pointEditComponent.setButtonClickHandler(() => {
+      replaceFormToPoint()
+      document.removeEventListener('keydown', onEscKeyDown);
     });
 
     return render(pointComponent, this._ULcomponent.element);
