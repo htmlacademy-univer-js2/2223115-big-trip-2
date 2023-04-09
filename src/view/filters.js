@@ -21,7 +21,7 @@ const createFiltersTemplate = () => (
   </form>`
 );
 
-class FiltersView extends AbstractView{
+class FiltersView extends AbstractView {
   get template() {
     return createFiltersTemplate();
   }

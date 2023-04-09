@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import { humanizeDate, humanizeTime } from '../utils';
 
 
@@ -178,26 +178,16 @@ const createEditPointTemplate = (point, currentOffers, currentDestination) => {
   );
 };
 
-class EditPointView {
+class EditPointView extends AbstractView {
   constructor(point, offers, destination) {
+    super()
     this._point = point;
     this._offers = offers;
     this._destination = destination;
   }
 
-  get _template() {
+  get template() {
     return createEditPointTemplate(this._point, this._offers, this._destination);
-  }
-
-  get element() {
-    if(!this._element) {
-      this._element = createElement(this._template);
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

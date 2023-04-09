@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import { humanizeDate, humanizeTime, getDifference } from '../utils';
 
 const createPointTemplate = (point, currentOffers, currentDesctination) => {
@@ -95,26 +95,16 @@ const createPointTemplate = (point, currentOffers, currentDesctination) => {
   </li>`
   );};
 
-class PointView {
+class PointView extends AbstractView {
   constructor(point, offers, destination) {
+    super()
     this.point = point;
     this.offers = offers;
     this.destination = destination;
   }
 
-  get _template() {
+  get template() {
     return createPointTemplate(this.point, this.offers, this.destination);
-  }
-
-  get element() {
-    if(!this._element) {
-      this._element = createElement(this._template);
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 
