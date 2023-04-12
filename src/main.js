@@ -13,5 +13,5 @@ const tripPresenter = new TripPresenter(tripContainerElement, pointsModel);
 const filters = generateFilter(pointsModel.points)
 const sortedPoints = generateSortedPoints(pointsModel.points)
 
-render(new FiltersView(), filtersContainerElement);
+render(new FiltersView(filters), filtersContainerElement);
 tripPresenter.init();
