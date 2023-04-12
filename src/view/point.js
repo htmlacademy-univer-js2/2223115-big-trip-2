@@ -32,7 +32,7 @@ const createPointTemplate = (point, currentOffers, currentDesctination) => {
     const differenceDays = formattingDate(getDifference(dateFrom, dateTo, 'day'));
     const differenceHours = formattingDate(getDifference(dateFrom, dateTo, 'hour') - differenceDays * 24);
     const differenceMinute = formattingDate(getDifference(dateFrom, dateTo, 'minute') - differenceDays * 24 * 60 - differenceHours * 60 + 1);
-
+    
     if (differenceDays !== '00') {
       return `${differenceDays}D ${differenceHours}H ${differenceMinute}M`;
     }

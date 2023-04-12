@@ -57,6 +57,12 @@ const FITERS_MESSAGE = {
   PAST: 'There are no past events now'
 }
 
+const SORTED_TYPE = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price'
+}
+
 
 export {
   CITIES,
@@ -65,6 +71,7 @@ export {
   TYPES_POINT,
   COUNT_POINT,
   FILTERS_TYPE,
-  FITERS_MESSAGE
+  FITERS_MESSAGE,
+  SORTED_TYPE
 };
 
