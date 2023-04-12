@@ -1,27 +1,17 @@
-import { createElement } from '../render';
+import AbstractView from "../framework/view/abstract-view";
 
 const createFirstMessageTeplate = (message) => (
   `<p class="trip-events__msg">${message}</p>`
 );
 
-class FirstMessageView {
+class FirstMessageView extends AbstractView {
   constructor() {
+    super()
     this._message = 'Click New Event to create your first point';
   }
 
-  get _template() {
+  get template() {
     return createFirstMessageTeplate(this._message);
-  }
-
-  get element() {
-    if(!this._element) {
-      this._element = createElement(this._template);
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

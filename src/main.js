@@ -1,4 +1,4 @@
-import { render } from './render';
+import { render } from './framework/render';
 import FiltersView from './view/filters';
 import TripPresenter from './presenter/trip';
 import PointsModel from './model/points-model';
