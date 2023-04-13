@@ -59,8 +59,10 @@ const FITERS_MESSAGE = {
 
 const SORTED_TYPE = {
   DAY: 'day',
+  EVENT: 'event',
   TIME: 'time',
-  PRICE: 'price'
+  PRICE: 'price',
+  OFFERS: 'offers'
 }
 
 
