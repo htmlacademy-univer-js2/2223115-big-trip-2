@@ -5,6 +5,7 @@ import NewPointView from '../view/new-point';
 import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
 import FirstMessageView from '../view/first-message';
+import generateSorting from '../fish-data/sorting';
 
 class TripPresenter {
   constructor(container, pointsModel) {
@@ -24,7 +25,8 @@ class TripPresenter {
       render(new FirstMessageView(), this._container);
     }
     else {
-      render(new SortView(), this._container);
+      const sorting = generateSorting(this._pointsModel.points)
+      render(new SortView(sorting), this._container);
       render(this._tripListComponent, this._container);
 
       render(new NewPointView(this._pointsModel.getOffers(),
