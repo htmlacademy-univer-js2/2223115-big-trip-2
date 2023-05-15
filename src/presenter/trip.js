@@ -20,28 +20,44 @@ class TripPresenter {
     this._renderTrip();
   }
 
-  _renderTrip() {
-    if (this._listPoints.length === 0) {
-      render(new FirstMessageView(), this._container);
-    }
-    else {
-      const sorting = generateSorting(this._pointsModel.points)
-      render(new SortView(sorting), this._container);
-      render(this._tripListComponent, this._container);
-
-      render(new NewPointView(this._pointsModel.getOffers(),
-        this._pointsModel.getDestination()), this._tripListComponent.element);
-
-      for (let i = 0; i < this._listPoints.length; i++) {
-        const currentPoint = this._listPoints[i];
-        const curretnOffers = this._pointsModel.getOffers(currentPoint);
-        const currentDesctination = this._pointsModel.getDestination(currentPoint);
-        this._renderPoint(currentPoint, curretnOffers, currentDesctination);
-      }
-    }
+  _renderFirstMessage = () => {
+    render(new FirstMessageView(), this._container);
   }
 
-  _renderPoint(point, offers, destination) {
+  _renderSort = () => {
+    const sorting = generateSorting(this._pointsModel.points)
+      render(new SortView(sorting), this._container);
+  }
+
+  _renderNewPoint = () => {
+    render(new NewPointView(this._pointsModel.getOffers(),
+      this._pointsModel.getDestination()), this._tripListComponent.element);
+  }
+
+  _renderPoints = () => {
+    this._listPoints
+      .forEach((point) => this._renderPoint(point))
+  }
+
+  _renderTripList = () => {
+    render(this._tripListComponent, this._container);
+    this._renderPoints()
+  }
+
+  _renderTrip() {
+    if (this._listPoints.length === 0) {
+      this._renderFirstMessage()
+      return
+    }
+
+    this._renderSort()
+    this._renderTripList()
+  }
+  
+
+  _renderPoint(point) {
+    const offers = this._pointsModel.getOffers(point)
+    const destination = this._pointsModel.getDestination(point)
     const pointComponent = new PointView(point, offers, destination);
     const pointEditComponent = new EditPointView(point, offers, destination);
 
