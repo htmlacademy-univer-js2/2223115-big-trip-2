@@ -12,6 +12,7 @@ class TripPresenter {
     this._container = container;
     this._pointsModel = pointsModel;
     this._listPoints = [];
+    this._pointPresenter = new Map();
   }
 
   init() {
@@ -56,6 +57,7 @@ class TripPresenter {
   _renderPoint(point) {
     const pointPresenter = new PointPresenter(this._tripListComponent.element, this._pointsModel);
     pointPresenter.init(point)
+    this._pointPresenter.set(point.id, pointPresenter);
   }
 }
 
