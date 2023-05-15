@@ -59,6 +59,12 @@ class TripPresenter {
     pointPresenter.init(point)
     this._pointPresenter.set(point.id, pointPresenter);
   }
+
+  _clearPointList = () => {
+    this._pointPresenter
+      .forEach((presenter) => presenter.destroy())
+    this._pointPresenter.clear()
+  }
 }
 
 export default TripPresenter;
