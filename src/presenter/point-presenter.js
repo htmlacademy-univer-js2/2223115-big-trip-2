@@ -3,9 +3,10 @@ import PointView from '../view/point';
 import EditPointView from '../view/edit-point';
 
 class PointPresenter {
-    constructor (tripList, points) {
+    constructor (tripList, points, changeData) {
         this._tripListComponent = tripList;
         this._pointsModel = points;
+        this._changeData = changeData;
         this._point = null;
         this._offers = null;
         this._destination = null;
@@ -24,12 +25,15 @@ class PointPresenter {
         this._pointComponent = new PointView(this._point, this._offers, this._destination);
         this._pointEditComponent = new EditPointView(this._point, this._offers, this._destination);
 
+        this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick)
+
         this._pointComponent.setEditClickHandler(() => {
             this._replacePointToForm();
             document.addEventListener('keydown', this._onEscKeyDown);
         });
     
         this._pointEditComponent.setFormSubmitHandler(() => {
+            //this._changeData(this._point)
             this._replaceFormToPoint()
             document.removeEventListener('keydown', this._onEscKeyDown);
         });
@@ -50,7 +54,7 @@ class PointPresenter {
       
         if (this._tripListComponent.contains(prevPointEditComponent.element)) {
             replace(this._pointEditComponent, prevPointEditComponent)
-        }  
+        }
 
         remove(prevPointComponent)
         remove(prevPointEditComponent)
@@ -75,7 +79,11 @@ class PointPresenter {
         this._replaceFormToPoint();
         document.removeEventListener('keydown', this._onEscKeyDown);
         }
-    }; 
+    };
+
+    _handleFavoriteClick = () => {
+        this._changeData({...this._point, isFavorite: !this._point.isFavorite})
+    };
 }
 
 export default PointPresenter;

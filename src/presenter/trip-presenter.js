@@ -1,4 +1,5 @@
 import { render} from '../framework/render';
+import { updateItem } from '../utils';
 import NewPointView from '../view/new-point';
 import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
@@ -6,7 +7,7 @@ import FirstMessageView from '../view/first-message';
 import generateSorting from '../fish-data/sorting';
 import PointPresenter from './point-presenter';
 
-class TripPresenter {
+class TripPresenter { 
   constructor(container, pointsModel) {
     this._tripListComponent = new TripListView();
     this._container = container;
@@ -18,6 +19,11 @@ class TripPresenter {
   init() {
     this._listPoints = this._pointsModel.points;
     this._renderTrip();
+  }
+
+  _handlePointChange = (updatedPoint) => {
+    this._listPoints = updateItem(this._listPoints, updatedPoint)
+    this._pointPresenter.get(updatedPoint.id).init(updatedPoint)
   }
 
   _renderFirstMessage = () => {
@@ -55,7 +61,11 @@ class TripPresenter {
   }
   
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._tripListComponent.element, this._pointsModel);
+    const pointPresenter = new PointPresenter(
+      this._tripListComponent.element, 
+      this._pointsModel,
+      this._handlePointChange);
+
     pointPresenter.init(point)
     this._pointPresenter.set(point.id, pointPresenter);
   }
