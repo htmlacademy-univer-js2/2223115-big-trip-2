@@ -1,4 +1,4 @@
-import { render, replace } from '../framework/render';
+import { render, replace, remove } from '../framework/render';
 import PointView from '../view/point';
 import EditPointView from '../view/edit-point';
 
@@ -15,6 +15,9 @@ class PointPresenter {
 
     init = (point) => {
         this._point = point
+
+        const prevPointComponent = this._pointComponent
+        const prevPointEditComponent = this._pointEditComponent
 
         this._offers = this._pointsModel.getOffers(this._point)
         this._destination = this._pointsModel.getDestination(this._point)
@@ -36,8 +39,27 @@ class PointPresenter {
             document.removeEventListener('keydown', this._onEscKeyDown);
         });
 
-        render(this._pointComponent, this._tripListComponent);
-    }   
+        if (prevPointComponent == null || prevPointEditComponent === null) {
+            render(this._pointComponent, this._tripListComponent)
+            return
+        }
+
+        if (this._tripListComponent.contains(prevPointComponent.element)) {
+            replace(this._pointComponent, prevPointComponent)
+        }
+      
+        if (this._tripListComponent.contains(prevPointEditComponent.element)) {
+            replace(this._pointEditComponent, prevPointEditComponent)
+        }  
+
+        remove(prevPointComponent)
+        remove(prevPointEditComponent)
+    } 
+
+    destroy = () => {
+        remove(this._pointComponent)
+        remove(this._pointEditComponent)
+    }
 
     _replacePointToForm = () => {
         replace(this._pointEditComponent, this._pointComponent);
