@@ -1,6 +1,6 @@
 import { render } from './framework/render';
 import FiltersView from './view/filters';
-import TripPresenter from './presenter/trip';
+import TripPresenter from './presenter/trip-presenter';
 import PointsModel from './model/points-model';
 import generateFilter from './fish-data/filter';
 

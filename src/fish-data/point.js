@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import { getRandomInteger } from '../utils';
 import { TYPES_POINT } from '../const';
 
@@ -10,6 +11,7 @@ const identifyFavorite = () => {
 };
 
 const generatePoint = () => ({
+  'id':nanoid(),
   'basePrice': getRandomInteger(1, 500),
   'dateFrom': `2019-07-10T${getRandomInteger(10,23)}:${getRandomInteger(10,59)}:00.845Z`,
   'dateTo': `2019-07-11T${getRandomInteger(10,23)}:${getRandomInteger(10,59)}:00.375Z`,

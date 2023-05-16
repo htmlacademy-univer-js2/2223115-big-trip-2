@@ -30,5 +30,7 @@ const sorting = {
 
 }
 
+const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item)
 
-export {getRandomInteger, humanizeDate, humanizeTime, getDifference, filter, sorting};
+
+export {getRandomInteger, humanizeDate, humanizeTime, getDifference, filter, sorting, updateItem};
