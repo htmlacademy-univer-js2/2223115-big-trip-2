@@ -26,6 +26,10 @@ class TripPresenter {
     this._pointPresenter.get(updatedPoint.id).init(updatedPoint)
   }
 
+  _handleModeChange = () => {
+    this._pointPresenter.forEach((presenter) => presenter.resetView())
+  }
+
   _renderFirstMessage = () => {
     render(new FirstMessageView(), this._container);
   }
@@ -64,7 +68,8 @@ class TripPresenter {
     const pointPresenter = new PointPresenter(
       this._tripListComponent.element, 
       this._pointsModel,
-      this._handlePointChange);
+      this._handlePointChange,
+      this._handleModeChange);
 
     pointPresenter.init(point)
     this._pointPresenter.set(point.id, pointPresenter);
