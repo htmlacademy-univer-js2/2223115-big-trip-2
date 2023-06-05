@@ -4,7 +4,6 @@ import NewPointView from '../view/new-point';
 import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
 import FirstMessageView from '../view/first-message';
-import generateSorting from '../fish-data/sorting';
 import PointPresenter from './point-presenter';
 
 class TripPresenter { 
@@ -35,8 +34,7 @@ class TripPresenter {
   }
 
   _renderSort = () => {
-    const sorting = generateSorting(this._pointsModel.points)
-      render(new SortView(sorting), this._container);
+      render(new SortView(), this._container);
   }
 
   _renderNewPoint = () => {
