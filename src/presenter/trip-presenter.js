@@ -15,14 +15,14 @@ class TripPresenter {
     this._pointsModel = pointsModel;
     this._listPoints = [];
     this._pointPresenter = new Map();
-    this._currentSortType = SORTED_TYPE.PRICE
+    this._currentSortType = SORTED_TYPE.DAY
     this._sourcedListPoints = []
   }
 
   init() {
-    this._listPoints = sortByPrice(this._pointsModel.points);
+    this._listPoints = sortByDay(this._pointsModel.points);
     this._renderTrip();
-    this._sourcedListPoints = this._listPoints;
+    this._sourcedListPoints = [...this._pointsModel.points];
   }
 
   _handlePointChange = (updatedPoint) => {
@@ -41,14 +41,14 @@ class TripPresenter {
 
   _sortPoints = (sortType) => {
     switch (sortType) {
-      case SORTED_TYPE.DAY:
-        this._listPoints = sortByDay(this._listPoints)
+      case SORTED_TYPE.PRICE:
+        this._listPoints = sortByPrice(this._listPoints)
         break;
       case SORTED_TYPE.TIME:
         this._listPoints = sortByTime(this._listPoints)
         break;
       default:
-        this._listPoints = sortByPrice(this._listPoints)
+        this._listPoints = [...this._sourcedListPoints]
     }
     this._currentSortType = sortType
   }
