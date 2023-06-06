@@ -1,28 +1,33 @@
 import { render} from '../framework/render';
-import { updateItem } from '../utils';
+import { updateItem, sortByDay, sortByPrice, sortByTime } from '../utils';
 import NewPointView from '../view/new-point';
 import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
 import FirstMessageView from '../view/first-message';
-import generateSorting from '../fish-data/sorting';
 import PointPresenter from './point-presenter';
+import { SORTED_TYPE } from '../const';
 
 class TripPresenter { 
   constructor(container, pointsModel) {
     this._tripListComponent = new TripListView();
+    this._sortComponent = new SortView()
     this._container = container;
     this._pointsModel = pointsModel;
     this._listPoints = [];
     this._pointPresenter = new Map();
+    this._currentSortType = SORTED_TYPE.PRICE
+    this._sourcedListPoints = []
   }
 
   init() {
-    this._listPoints = this._pointsModel.points;
+    this._listPoints = sortByPrice(this._pointsModel.points);
     this._renderTrip();
+    this._sourcedListPoints = this._listPoints;
   }
 
   _handlePointChange = (updatedPoint) => {
     this._listPoints = updateItem(this._listPoints, updatedPoint)
+    this._sourcedListPoints = updateItem(this._sourcedListPoints, updatedPoint)
     this._pointPresenter.get(updatedPoint.id).init(updatedPoint)
   }
 
@@ -34,9 +39,33 @@ class TripPresenter {
     render(new FirstMessageView(), this._container);
   }
 
+  _sortPoints = (sortType) => {
+    switch (sortType) {
+      case SORTED_TYPE.DAY:
+        this._listPoints = sortByDay(this._listPoints)
+        break;
+      case SORTED_TYPE.TIME:
+        this._listPoints = sortByTime(this._listPoints)
+        break;
+      default:
+        this._listPoints = sortByPrice(this._listPoints)
+    }
+    this._currentSortType = sortType
+  }
+
+  _handleSortTypeChange = (sortType) => {
+    if (sortType === this._currentSortType){
+      return
+    }
+
+    this._sortPoints(sortType)
+    this._clearPointList()
+    this._renderPoints()
+  }
+
   _renderSort = () => {
-    const sorting = generateSorting(this._pointsModel.points)
-      render(new SortView(sorting), this._container);
+      render(this._sortComponent, this._container);
+      this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderNewPoint = () => {
