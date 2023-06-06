@@ -43,7 +43,6 @@ class TripPresenter {
     switch (sortType) {
       case SORTED_TYPE.DAY:
         this._listPoints = sortByDay(this._listPoints)
-        console.log(this._listPoints)
         break;
       case SORTED_TYPE.TIME:
         this._listPoints = sortByTime(this._listPoints)
@@ -60,6 +59,8 @@ class TripPresenter {
     }
 
     this._sortPoints(sortType)
+    this._clearPointList()
+    this._renderPoints()
   }
 
   _renderSort = () => {
