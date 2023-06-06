@@ -22,12 +22,12 @@ class TripPresenter {
   init() {
     this._listPoints = sortByPrice(this._pointsModel.points);
     this._renderTrip();
-    this._sourcedListPoints = this._pointsModel.points;
+    this._sourcedListPoints = this._listPoints;
   }
 
   _handlePointChange = (updatedPoint) => {
     this._listPoints = updateItem(this._listPoints, updatedPoint)
-    rhis._sourcedListPoints = updateItem(this._sourcedListPoints, updatedPoint)
+    this._sourcedListPoints = updateItem(this._sourcedListPoints, updatedPoint)
     this._pointPresenter.get(updatedPoint.id).init(updatedPoint)
   }
 
@@ -48,7 +48,7 @@ class TripPresenter {
         this._listPoints = sortByTime(this._listPoints)
         break;
       default:
-        this._listPoints = [...this._sourcedListPoints]
+        this._listPoints = sortByPrice(this._listPoints)
     }
     this._currentSortType = sortType
   }
