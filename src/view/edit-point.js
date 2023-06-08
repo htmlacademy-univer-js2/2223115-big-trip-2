@@ -1,4 +1,5 @@
-import AbstractView from '../framework/view/abstract-view';
+//import AbstractView from '../framework/view/abstract-view';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view'
 import { humanizeDate, humanizeTime } from '../utils';
 
 
@@ -178,7 +179,7 @@ const createEditPointTemplate = (point, currentOffers, currentDestination) => {
   );
 };
 
-class EditPointView extends AbstractView {
+class EditPointView extends AbstractStatefulView {
   constructor(point, offers, destination) {
     super()
     this._point = point;
@@ -210,5 +211,7 @@ class EditPointView extends AbstractView {
     this._callback.click();
   }
 }
+
+
 
 export default EditPointView;
