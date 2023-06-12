@@ -1,6 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view'
 import { humanizeDate, humanizeTime } from '../utils';
 import offersByType from '../fish-data/offer';
+import destinations from '../fish-data/destination';
+import { CITIES } from '../const';
 
 
 const createEditPointTemplate = (point, currentOffers, currentDestination) => {
@@ -213,6 +215,14 @@ class EditPointView extends AbstractStatefulView {
     });
   };
 
+  _destinationChangeHandler = (evt) => {
+    evt.preventDefault()
+    const currentCity = evt.target.value
+    const currentId = CITIES.find((x) => x.city === currentCity)['id']
+    this._destination = destinations.find((x) => x.id === currentId)
+    this.updateElement({destination: currentId})
+  }
+
   _typeChangeHandler = (evt) => {
     this._offers = offersByType.find((x) => x.type === evt.target.value)['offers']
     this.updateElement({type: evt.target.value, offers: []})
@@ -226,6 +236,7 @@ class EditPointView extends AbstractStatefulView {
 
   _setInnerHandlers = () => {
     this.element.querySelector('.event__type-group').addEventListener('change',  this._typeChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this._destinationChangeHandler)
     this.element.querySelector('.event__section--offers').addEventListener('change', this._offersChangeHandler);
   }
 
