@@ -13,10 +13,7 @@ const generateDescription = () => {
   return randomDescription;
 };
 
-const generateCity = (id) => {
-  const number = getRandomInteger(0, CITIES.length - 1)
-  return CITIES.find((x) => x.id === id)['city']
-};
+const generateCity = (id) => CITIES.find((x) => x.id === id)['city']
 
 const generateSrc = () => `http://picsum.photos/300/200?r=${getRandomInteger(1, 20)}`;
 
