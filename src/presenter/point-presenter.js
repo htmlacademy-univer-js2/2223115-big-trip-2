@@ -64,6 +64,7 @@ class PointPresenter {
 
     resetView = () => {
         if (this._mode !== Mode.DEFAULT) {
+            this._pointEditComponent.reset(this._point)
             this._replaceFormToPoint()
         }
     }
@@ -82,6 +83,7 @@ class PointPresenter {
     _onEscKeyDown = (evt) => {
         if (evt.key === 'Escape' || evt.key === 'Esc') {
             evt.preventDefault();
+            this._pointEditComponent.reset(this._point)
             this._replaceFormToPoint();
             document.removeEventListener('keydown', this._onEscKeyDown);
         }
@@ -96,13 +98,14 @@ class PointPresenter {
         this._changeData({...this._point, isFavorite: !this._point.isFavorite})
     };
 
-    _handleFormSubmitClick = () => {
+    _handleFormSubmitClick = (point) => {
         this._replaceFormToPoint()
-        this._changeData(this._point)
+        this._changeData(point)
         document.removeEventListener('keydown', this._onEscKeyDown);
     }
 
     _handleButtonlick = () => {
+        this._pointEditComponent.reset(this._point)
         this._replaceFormToPoint()
         document.removeEventListener('keydown', this._onEscKeyDown)
     }

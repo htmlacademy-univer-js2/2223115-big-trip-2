@@ -176,6 +176,8 @@ class EditPointView extends AbstractStatefulView {
     this._offers = offers;
     this._destination = destination;
     this._setInnerHandlers();
+    this._prevOffers = offers;
+    this._prevDestination = destination;
   }
 
   get template() {
@@ -238,6 +240,14 @@ class EditPointView extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change',  this._typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this._destinationChangeHandler)
     this.element.querySelector('.event__section--offers').addEventListener('change', this._offersChangeHandler);
+  }
+
+  reset = (point) => {
+    this._offers = this._prevOffers;
+    this._destination = this._prevDestination;
+    this.updateElement(
+      EditPointView.parsePointToState(point)
+    )
   }
 
   static parsePointToState = (point) => ({...point});
