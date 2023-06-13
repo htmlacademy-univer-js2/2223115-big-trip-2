@@ -42,7 +42,7 @@ class TripPresenter {
   _sortPoints = (sortType) => {
     switch (sortType) {
       case SORTED_TYPE.PRICE:
-        this._listPoints = sortByPrice(this._listPoints)
+        this._listPoints = sortByPrice(this._pointsModel)
         break;
       case SORTED_TYPE.TIME:
         this._listPoints = sortByTime(this._listPoints)
