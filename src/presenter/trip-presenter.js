@@ -13,25 +13,26 @@ class TripPresenter {
     this._sortComponent = new SortView()
     this._container = container;
     this._pointsModel = pointsModel;
-    this._listPoints = [];
     this._pointPresenter = new Map();
     this._currentSortType = SORTED_TYPE.DAY
-    this._sourcedListPoints = []
   }
 
   get points() {
-    return this._pointsModel.points;
+    switch (this._currentSortType){
+      case SORTED_TYPE.PRICE:
+        return sortByPrice(this._pointsModel)
+      case SORTED_TYPE.TIME:
+        return sortByTime([...this._pointsModel.points])
+    }
+
+    return sortByDay([...this._pointsModel.points]);
   }
 
   init() {
-    this._listPoints = sortByDay(this._pointsModel.points);
     this._renderTrip();
-    this._sourcedListPoints = [...this._pointsModel.points];
   }
 
   _handlePointChange = (updatedPoint) => {
-    this._listPoints = updateItem(this._listPoints, updatedPoint)
-    this._sourcedListPoints = updateItem(this._sourcedListPoints, updatedPoint)
     this._pointPresenter.get(updatedPoint.id).init(updatedPoint)
   }
 
@@ -43,28 +44,14 @@ class TripPresenter {
     render(new FirstMessageView(), this._container);
   }
 
-  _sortPoints = (sortType) => {
-    switch (sortType) {
-      case SORTED_TYPE.PRICE:
-        this._listPoints = sortByPrice(this._pointsModel)
-        break;
-      case SORTED_TYPE.TIME:
-        this._listPoints = sortByTime(this._listPoints)
-        break;
-      default:
-        this._listPoints = [...this._sourcedListPoints]
-    }
-    this._currentSortType = sortType
-  }
-
   _handleSortTypeChange = (sortType) => {
     if (sortType === this._currentSortType){
       return
     }
 
-    this._sortPoints(sortType)
+    this._currentSortType = sortType
     this._clearPointList()
-    this._renderPoints()
+    this._renderPoints(this.points)
   }
 
   _renderSort = () => {
@@ -77,18 +64,17 @@ class TripPresenter {
       this._pointsModel.getDestination()), this._tripListComponent.element);
   }
 
-  _renderPoints = () => {
-    this._listPoints
-      .forEach((point) => this._renderPoint(point))
+  _renderPoints = (points) => {
+    points.forEach((point) => this._renderPoint(point))
   }
 
   _renderTripList = () => {
     render(this._tripListComponent, this._container);
-    this._renderPoints()
+    this._renderPoints(this.points)
   }
 
   _renderTrip() {
-    if (this._listPoints.length === 0) {
+    if (this.points.length === 0) {
       this._renderFirstMessage()
       return
     }
