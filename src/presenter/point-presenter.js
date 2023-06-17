@@ -97,7 +97,7 @@ class PointPresenter {
 
     _handleFavoriteClick = () => {
         this._changeData(
-            UserAction.UPDATE_TASK, 
+            UserAction.UPDATE_POINT, 
             UpdateType.MINOR,
             {...this._point, isFavorite: !this._point.isFavorite})
     };
@@ -105,7 +105,7 @@ class PointPresenter {
     _handleFormSubmitClick = (point) => {
         this._replaceFormToPoint()
         this._changeData(
-            UserAction.UPDATE_TASK,
+            UserAction.UPDATE_POINT,
             UpdateType.MINOR,
             point)
         document.removeEventListener('keydown', this._onEscKeyDown);

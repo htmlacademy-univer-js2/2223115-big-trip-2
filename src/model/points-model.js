@@ -33,7 +33,7 @@ class PointsModel extends Observable {
   updatePoint = (updateType, update) => {
     const updatedIndex = this._points.findIndex((point) => point.id === update.id);
 
-    this.points = [
+    this._points = [
       ...this._points.slice(0, updatedIndex),
       update,
       ...this._points.slice(updatedIndex + 1)
@@ -49,7 +49,7 @@ class PointsModel extends Observable {
     this._notify(updateType, update);
   }
 
-  delete = (updateType, update) => {
+  deletePoint = (updateType, update) => {
     const deletedIndex = this._points.findIndex((point) => point.id === update.id);
 
     this._points = [
