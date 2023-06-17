@@ -1,5 +1,5 @@
 import { render} from '../framework/render';
-import { updateItem, sortByDay, sortByPrice, sortByTime } from '../utils';
+import { sortByDay, sortByPrice, sortByTime } from '../utils';
 import NewPointView from '../view/new-point';
 import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
@@ -13,6 +13,7 @@ class TripPresenter {
     this._sortComponent = new SortView()
     this._container = container;
     this._pointsModel = pointsModel;
+    this._pointsModel.addObserver(this._handleModelEvent)
     this._pointPresenter = new Map();
     this._currentSortType = SORTED_TYPE.DAY
   }
@@ -32,13 +33,23 @@ class TripPresenter {
     this._renderTrip();
   }
 
-  _handlePointChange = (updatedPoint) => {
-    this._pointPresenter.get(updatedPoint.id).init(updatedPoint)
-  }
-
   _handleModeChange = () => {
     this._pointPresenter.forEach((presenter) => presenter.resetView())
   }
+
+  _handleViewAction = (actionType, updateType, update) => {
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  };
+
+  _handleModelEvent = (updateType, data) => {
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
+  };
 
   _renderFirstMessage = () => {
     render(new FirstMessageView(), this._container);
@@ -87,7 +98,7 @@ class TripPresenter {
     const pointPresenter = new PointPresenter(
       this._tripListComponent.element, 
       this._pointsModel,
-      this._handlePointChange,
+      this._handleViewAction,
       this._handleModeChange);
 
     pointPresenter.init(point)

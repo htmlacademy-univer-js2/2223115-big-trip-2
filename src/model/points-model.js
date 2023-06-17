@@ -30,6 +30,35 @@ class PointsModel extends Observable {
     return this._destinations;
   }
 
+  updatePoint = (updateType, update) => {
+    const updatedIndex = this._points.findIndex((point) => point.id === update.id);
+
+    this.points = [
+      ...this._points.slice(0, updatedIndex),
+      update,
+      ...this._points.slice(updatedIndex + 1)
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  addPoint = (updateType, update) => {
+    this._points = [update, 
+      ...this._points];
+
+    this._notify(updateType, update);
+  }
+
+  delete = (updateType, update) => {
+    const deletedIndex = this._points.findIndex((point) => point.id === update.id);
+
+    this._points = [
+      ...this._points.slice(0, deletedIndex),
+      ...this._points.slice(deletedIndex)
+    ]
+    
+    this._notify(updateType, update);
+  }
 }
 
 export default PointsModel;

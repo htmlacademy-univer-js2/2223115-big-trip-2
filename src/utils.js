@@ -36,6 +36,4 @@ const sortByPrice = (pointsModel) => pointsModel.points.sort((prev, next) => {
   return prevFinalPrice - nextFinalPrice;
 })
 
-const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item)
-
-export {getRandomInteger, humanizeDate, humanizeTime, getDifference, getFinalPrice, filter, sortByDay, sortByPrice, sortByTime, updateItem};
+export {getRandomInteger, humanizeDate, humanizeTime, getDifference, getFinalPrice, filter, sortByDay, sortByPrice, sortByTime};

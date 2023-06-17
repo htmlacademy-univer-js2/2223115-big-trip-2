@@ -1,6 +1,7 @@
 import { render, replace, remove } from '../framework/render';
 import PointView from '../view/point';
 import EditPointView from '../view/edit-point';
+import { UserAction, UpdateType } from '../const';
 
 const Mode = {
     DEFAULT: 'DEFAULT',
@@ -95,12 +96,18 @@ class PointPresenter {
     }
 
     _handleFavoriteClick = () => {
-        this._changeData({...this._point, isFavorite: !this._point.isFavorite})
+        this._changeData(
+            UserAction.UPDATE_TASK, 
+            UpdateType.MINOR,
+            {...this._point, isFavorite: !this._point.isFavorite})
     };
 
     _handleFormSubmitClick = (point) => {
         this._replaceFormToPoint()
-        this._changeData(point)
+        this._changeData(
+            UserAction.UPDATE_TASK,
+            UpdateType.MINOR,
+            point)
         document.removeEventListener('keydown', this._onEscKeyDown);
     }
 
