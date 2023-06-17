@@ -1,10 +1,12 @@
 import { COUNT_POINT } from '../const';
+import Observable from '../framework/observable';
 import generatePoint from '../fish-data/point';
 import offersByType from '../fish-data/offer';
 import destinations from '../fish-data/destination';
 
-class PointsModel {
+class PointsModel extends Observable {
   constructor() {
+    super();
     this._points = Array.from({length: COUNT_POINT}, generatePoint);
     this._offers = offersByType;
     this._destinations = destinations;

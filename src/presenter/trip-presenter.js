@@ -19,6 +19,10 @@ class TripPresenter {
     this._sourcedListPoints = []
   }
 
+  get points() {
+    return this._pointsModel.points;
+  }
+
   init() {
     this._listPoints = sortByDay(this._pointsModel.points);
     this._renderTrip();
