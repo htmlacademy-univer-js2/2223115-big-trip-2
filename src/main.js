@@ -9,8 +9,8 @@ const tripContainerElement = document.querySelector('.trip-events');
 
 const pointsModel = new PointsModel();
 const filterModel = new FiltersModel();
-const tripPresenter = new TripPresenter(tripContainerElement, pointsModel);
+const tripPresenter = new TripPresenter(tripContainerElement, pointsModel, filterModel);
 const filterPresenter = new FilterPresenter(filtersContainerElement, filterModel, pointsModel)
 
-tripPresenter.init();
 filterPresenter.init();
+tripPresenter.init();

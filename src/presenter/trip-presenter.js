@@ -6,28 +6,36 @@ import TripListView from '../view/trip-list';
 import FirstMessageView from '../view/first-message';
 import PointPresenter from './point-presenter';
 import { SORTED_TYPE , UserAction, UpdateType} from '../const';
+import { filters } from '../utils';
 
 class TripPresenter { 
-  constructor(container, pointsModel) {
+  constructor(container, pointsModel, filterModel) {
     this._tripListComponent = new TripListView();
     this._sortComponent = null;
     this._firstNessageComponent = new FirstMessageView();
     this._container = container;
     this._pointsModel = pointsModel;
-    this._pointsModel.addObserver(this._handleModelEvent)
+    this._filterModel = filterModel;
     this._pointPresenter = new Map();
     this._currentSortType = SORTED_TYPE.DAY
+
+    this._pointsModel.addObserver(this._handleModelEvent)
+    this._filterModel.addObserver(this._handleModelEvent)
   }
 
   get points() {
+    const filterType = this._filterModel.filter;
+    const points = this._pointsModel.points;
+    const filteredPoints = filters[filterType](points);
+
     switch (this._currentSortType){
       case SORTED_TYPE.PRICE:
-        return sortByPrice(this._pointsModel)
+        return filters[filterType](sortByPrice(this._pointsModel))
       case SORTED_TYPE.TIME:
-        return sortByTime([...this._pointsModel.points])
+        return sortByTime([...filteredPoints])
     }
 
-    return sortByDay([...this._pointsModel.points]);
+    return sortByDay([...filteredPoints]);
   }
 
   init() {

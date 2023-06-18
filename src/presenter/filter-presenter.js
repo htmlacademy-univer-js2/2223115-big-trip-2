@@ -20,17 +20,17 @@ class FilterPresenter {
         return [
             {
                 type: FILTERS_TYPE.EVERYTHING,
-                name: 'EVERYTHING',
+                name: 'everything',
                 count: filters[FILTERS_TYPE.EVERYTHING](points).length
             },
             {
                 type: FILTERS_TYPE.FUTURE,
-                name: 'FUTURE',
+                name: 'future',
                 count: filters[FILTERS_TYPE.FUTURE](points).length
             },
             {
                 type: FILTERS_TYPE.PAST,
-                name: 'PAST',
+                name: 'past',
                 count: filters[FILTERS_TYPE.PAST](points).length
             }
         ]
