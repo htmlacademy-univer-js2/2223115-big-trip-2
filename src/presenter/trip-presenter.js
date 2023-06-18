@@ -1,4 +1,4 @@
-import { render} from '../framework/render';
+import { render, remove} from '../framework/render';
 import { sortByDay, sortByPrice, sortByTime } from '../utils';
 import NewPointView from '../view/new-point';
 import SortView from '../view/sort';
@@ -10,7 +10,8 @@ import { SORTED_TYPE , UserAction, UpdateType} from '../const';
 class TripPresenter { 
   constructor(container, pointsModel) {
     this._tripListComponent = new TripListView();
-    this._sortComponent = new SortView()
+    this._sortComponent = null;
+    this._firstNessageComponent = new FirstMessageView();
     this._container = container;
     this._pointsModel = pointsModel;
     this._pointsModel.addObserver(this._handleModelEvent)
@@ -57,14 +58,18 @@ class TripPresenter {
         this._pointPresenter.get(updatedPoint.id).init(updatedPoint)
         break;
       case UpdateType.MINOR:
+        this._clearList()
+        this._renderTrip()
         break;
       case UpdateType.MAJOR:
+        this._clearList({resetSortType: true})
+        this._renderTrip()
         break;
     }
   };
 
   _renderFirstMessage = () => {
-    render(new FirstMessageView(), this._container);
+    render(this._firstNessageComponent, this._container);
   }
 
   _handleSortTypeChange = (sortType) => {
@@ -73,11 +78,12 @@ class TripPresenter {
     }
 
     this._currentSortType = sortType
-    this._clearPointList()
-    this._renderPoints(this.points)
+    this._clearList()
+    this._renderTrip()
   }
 
   _renderSort = () => {
+      this._sortComponent = new SortView(this._currentSortType)
       render(this._sortComponent, this._container);
       this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
@@ -91,21 +97,6 @@ class TripPresenter {
     points.forEach((point) => this._renderPoint(point))
   }
 
-  _renderTripList = () => {
-    render(this._tripListComponent, this._container);
-    this._renderPoints(this.points)
-  }
-
-  _renderTrip() {
-    if (this.points.length === 0) {
-      this._renderFirstMessage()
-      return
-    }
-
-    this._renderSort()
-    this._renderTripList()
-  }
-  
   _renderPoint(point) {
     const pointPresenter = new PointPresenter(
       this._tripListComponent.element, 
@@ -117,10 +108,28 @@ class TripPresenter {
     this._pointPresenter.set(point.id, pointPresenter);
   }
 
-  _clearPointList = () => {
+  _renderTrip() {
+    if (this.points.length === 0) {
+      this._renderFirstMessage()
+      return
+    }
+
+    this._renderSort()
+    render(this._tripListComponent, this._container);
+    this._renderPoints(this.points)
+  }
+  
+  _clearList = ({resetSortType = false} = {}) => {
     this._pointPresenter
       .forEach((presenter) => presenter.destroy())
     this._pointPresenter.clear()
+
+    remove(this._sortComponent)
+    remove(this._firstNessageComponent)
+
+    if (resetSortType) {
+      this._currentSortType = SORTED_TYPE.DAY
+    }
   }
 }
 
