@@ -54,7 +54,7 @@ class PointsModel extends Observable {
 
     this._points = [
       ...this._points.slice(0, deletedIndex),
-      ...this._points.slice(deletedIndex)
+      ...this._points.slice(deletedIndex + 1)
     ]
     
     this._notify(updateType, update);

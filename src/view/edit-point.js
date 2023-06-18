@@ -212,6 +212,16 @@ class EditPointView extends AbstractStatefulView {
     this._callback.click();
   }
 
+  setDeleteClickHandler = (callback) => {
+    this._callback.delete = callback
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this._deleteClickHandler)
+  }
+
+  _deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.delete(EditPointView.parseStateToPoint(this._state));
+  }
+
   _priceChangeHandler = (evt) => {
     evt.preventDefault();
     this._setState({
@@ -250,7 +260,8 @@ class EditPointView extends AbstractStatefulView {
     this._setDatepickerTo();
     this._setDatepickerFrom();
     this.setFormSubmitHandler(this._callback.submit);
-    this.setButtonClickHandler(this._callback.click)
+    this.setButtonClickHandler(this._callback.click);
+    this.setDeleteClickHandler(this._callback.delete);
   };
 
   _setInnerHandlers = () => {
