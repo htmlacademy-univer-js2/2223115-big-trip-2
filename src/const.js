@@ -67,9 +67,9 @@ const FILTERS_TYPE = {
 }
 
 const FITERS_MESSAGE = {
-  EVERYTHING: 'Click New Event to create your first point',
-  FUTURE: 'There are no future events now',
-  PAST: 'There are no past events now'
+  everything: 'Click New Event to create your first point',
+  future: 'There are no future events now',
+  past: 'There are no past events now'
 }
 
 const SORTED_TYPE = {

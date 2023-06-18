@@ -5,14 +5,14 @@ import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
 import FirstMessageView from '../view/first-message';
 import PointPresenter from './point-presenter';
-import { SORTED_TYPE , UserAction, UpdateType} from '../const';
+import { SORTED_TYPE, FITERS_MESSAGE, UserAction, UpdateType} from '../const';
 import { filters } from '../utils';
 
 class TripPresenter { 
   constructor(container, pointsModel, filterModel) {
     this._tripListComponent = new TripListView();
     this._sortComponent = null;
-    this._firstNessageComponent = new FirstMessageView();
+    this._firstNessageComponent = null;
     this._container = container;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
@@ -77,6 +77,9 @@ class TripPresenter {
   };
 
   _renderFirstMessage = () => {
+    const filterType = this._filterModel.filter
+    const message = FITERS_MESSAGE[filterType]
+    this._firstNessageComponent = new FirstMessageView(message)
     render(this._firstNessageComponent, this._container);
   }
 
