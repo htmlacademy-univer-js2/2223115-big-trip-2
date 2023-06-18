@@ -10,8 +10,8 @@ const createFilterItemTemplate = (filter, isChecked) => {
     </div>`)
 }
 
-const createFiltersTemplate = (filterItems) => {
-  const filterItemsTemplate = filterItems.map((filter, index) => createFilterItemTemplate(filter, index === 0)).join(' ');
+const createFiltersTemplate = (filterItems, currentFilter) => {
+  const filterItemsTemplate = filterItems.map((filter) => createFilterItemTemplate(filter, currentFilter === filter)).join(' ');
 
   return `<form class="trip-filters" action="#" method="get">
       ${filterItemsTemplate}
@@ -20,13 +20,14 @@ const createFiltersTemplate = (filterItems) => {
 };
 
 class FiltersView extends AbstractView {
-  constructor(filters){
-    super()
-    this._filters = filters
+  constructor(filters, currentFilter){
+    super();
+    this._filters = filters;
+    this._currentFilter = currentFilter;
   }
 
   get template() {
-    return createFiltersTemplate(this._filters);
+    return createFiltersTemplate(this._filters, this._currentFilter);
   }
 }
 
