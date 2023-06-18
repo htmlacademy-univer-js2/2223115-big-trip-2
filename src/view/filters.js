@@ -1,4 +1,6 @@
+import { fileURLToPath } from "url";
 import AbstractView from "../framework/view/abstract-view";
+import { filters } from "../utils";
 
 const createFilterItemTemplate = (filter, isChecked) => {
   const {name} = filter
@@ -11,7 +13,7 @@ const createFilterItemTemplate = (filter, isChecked) => {
 }
 
 const createFiltersTemplate = (filterItems, currentFilter) => {
-  const filterItemsTemplate = filterItems.map((filter) => createFilterItemTemplate(filter, currentFilter === filter)).join(' ');
+  const filterItemsTemplate = filterItems.map((filter) => createFilterItemTemplate(filter, currentFilter === filter.name)).join(' ');
 
   return `<form class="trip-filters" action="#" method="get">
       ${filterItemsTemplate}
@@ -29,6 +31,16 @@ class FiltersView extends AbstractView {
   get template() {
     return createFiltersTemplate(this._filters, this._currentFilter);
   }
+
+  setFilterTypeChangeHandler = (callback) => {
+    this._callback.filterTypeChange = callback;
+    this.element.addEventListener('change', this._filterTypeChangeHandler);
+  };
+
+  _filterTypeChangeHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.filterTypeChange(evt.target.value);
+  };
 }
 
 export default FiltersView;

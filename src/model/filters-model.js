@@ -1,5 +1,5 @@
 import Observable from "../framework/observable";
-import { FILTERS_TYPE, UpdateType } from "../const";
+import { FILTERS_TYPE } from "../const";
 
 class FiltersModel extends Observable {
     constructor() {
