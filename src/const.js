@@ -66,7 +66,7 @@ const FILTERS_TYPE = {
   PAST: 'past'
 }
 
-const FITERS_MESSAGE = {
+const FILTERS_MESSAGE = {
   everything: 'Click New Event to create your first point',
   future: 'There are no future events now',
   past: 'There are no past events now'
@@ -99,7 +99,7 @@ export {
   TYPES_POINT,
   COUNT_POINT,
   FILTERS_TYPE,
-  FITERS_MESSAGE,
+  FILTERS_MESSAGE,
   SORTED_TYPE,
   UserAction,
   UpdateType

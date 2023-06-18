@@ -7,15 +7,46 @@ import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+const BLANK_POINT = {
+  type: 'taxi',
+  basePrice: 99,
+  destination: 1,
+  dateFrom: '2019-07-10T22:55:56.845Z',
+  dateTo: '2019-07-11T11:22:13.375Z',
+  offers: []
+}
+
+const BLANK_OFFERS =[
+      {
+        'id': 0,
+        'title': 'Add a child safety seat',
+        'price': 100
+      },
+      {
+        'id': 1,
+        'title': 'Rent a polaroid',
+        'price': 100
+      },
+      {
+        'id': 2,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+]
+
+const BLANK_DESTINATION = {
+  'id': 1,
+  'description': ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
+  'name': 'Toronto',
+  'pictures': []
+}
 
 const createEditPointTemplate = (point, currentOffers, currentDestination) => {
   const {
     type,
-    basePrice,
     dateFrom,
     dateTo,
     offers} = point;
-
 
   const checkTypePoint = (currentType) => {
 
@@ -174,7 +205,7 @@ const createEditPointTemplate = (point, currentOffers, currentDestination) => {
 };
 
 class EditPointView extends AbstractStatefulView {
-  constructor(point, offers, destination) {
+  constructor(point = BLANK_POINT, offers = BLANK_OFFERS, destination = BLANK_DESTINATION) {
     super()
     this._state = EditPointView.parsePointToState(point);
     this._offers = offers;
@@ -182,7 +213,6 @@ class EditPointView extends AbstractStatefulView {
     this._prevOffers = offers;
     this._prevDestination = destination;
     this._datepicker = null;
-
     this._setInnerHandlers();
     this._setDatepickerTo();
     this._setDatepickerFrom();

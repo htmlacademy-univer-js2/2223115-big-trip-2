@@ -1,11 +1,11 @@
 import { render, remove} from '../framework/render';
 import { sortByDay, sortByPrice, sortByTime } from '../utils';
-import NewPointView from '../view/new-point';
 import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
 import FirstMessageView from '../view/first-message';
 import PointPresenter from './point-presenter';
-import { SORTED_TYPE, FITERS_MESSAGE, UserAction, UpdateType} from '../const';
+import NewPointPresenter from './new-point-presenter';
+import { SORTED_TYPE, FILTERS_MESSAGE, UserAction, UpdateType, FILTERS_TYPE} from '../const';
 import { filters } from '../utils';
 
 class TripPresenter { 
@@ -17,7 +17,8 @@ class TripPresenter {
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._pointPresenter = new Map();
-    this._currentSortType = SORTED_TYPE.DAY
+    this._newPointPresenter = new NewPointPresenter(this._tripListComponent.element, this._handleViewAction);
+    this._currentSortType = SORTED_TYPE.DAY;
 
     this._pointsModel.addObserver(this._handleModelEvent)
     this._filterModel.addObserver(this._handleModelEvent)
@@ -42,7 +43,14 @@ class TripPresenter {
     this._renderTrip();
   }
 
+  createPoint = (callback) => {
+    this._currentSortType = SORTED_TYPE.DAY;
+    this._filterModel.setFilter(UpdateType.MAJOR, FILTERS_TYPE.EVERYTHING);
+    this._newPointPresenter.init(callback)
+  }
+
   _handleModeChange = () => {
+    this._newPointPresenter.destroy();
     this._pointPresenter.forEach((presenter) => presenter.resetView())
   }
 
@@ -78,7 +86,7 @@ class TripPresenter {
 
   _renderFirstMessage = () => {
     const filterType = this._filterModel.filter
-    const message = FITERS_MESSAGE[filterType]
+    const message = FILTERS_MESSAGE[filterType]
     this._firstNessageComponent = new FirstMessageView(message)
     render(this._firstNessageComponent, this._container);
   }
@@ -97,11 +105,6 @@ class TripPresenter {
       this._sortComponent = new SortView(this._currentSortType)
       render(this._sortComponent, this._container);
       this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
-  }
-
-  _renderNewPoint = () => {
-    render(new NewPointView(this._pointsModel.getOffers(),
-      this._pointsModel.getDestination()), this._tripListComponent.element);
   }
 
   _renderPoints = (points) => {
@@ -131,6 +134,8 @@ class TripPresenter {
   }
   
   _clearList = ({resetSortType = false} = {}) => {
+    this._newPointPresenter.destroy();
+
     this._pointPresenter
       .forEach((presenter) => presenter.destroy())
     this._pointPresenter.clear()

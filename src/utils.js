@@ -21,6 +21,10 @@ const filters = {
 
 const getFinalPrice = (currentOffers, point) => {
   let finalPrice = point.basePrice
+  if (point.offers.length === 0) {
+    return finalPrice
+  }
+
   point.offers.forEach((id) => {
     finalPrice += currentOffers[id - 1]['price']
   })
