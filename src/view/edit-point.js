@@ -371,10 +371,21 @@ class EditPointView extends AbstractStatefulView {
 
   static parsePointToState = (point) => ({...point,
     dateTo: dayjs(point.dateTo).toDate(),
-    dateFrom: dayjs(point.dateFrom).toDate()
+    dateFrom: dayjs(point.dateFrom).toDate(),
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false,
   });
 
-  static parseStateToPoint = (state) => ({...state})
+  static parseStateToPoint = (state) => {
+    const point = {...state}
+    
+    delete point.isDisabled;
+    delete point.isSaving;
+    delete point.isDeleting;
+    
+    return point
+  }
 }
 
 
