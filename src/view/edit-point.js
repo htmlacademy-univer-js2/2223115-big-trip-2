@@ -1,8 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view'
 import { humanizeDate, humanizeTime, getFinalPrice } from '../utils';
-import offersByType from '../fish-data/offer';
-import destinations from '../fish-data/destination';
-import { CITIES } from '../const';
 import dayjs from 'dayjs';
 import he from 'he';
 import flatpickr from 'flatpickr';
@@ -10,39 +7,34 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
   type: 'taxi',
-  basePrice: 99,
-  destination: 1,
+  basePrice: 100,
+  destination: 19,
   dateFrom: '2019-07-10T22:55:56.845Z',
   dateTo: '2019-07-11T11:22:13.375Z',
   offers: []
 }
 
-const BLANK_OFFERS =[
-      {
-        'id': 0,
-        'title': 'Add a child safety seat',
-        'price': 100
-      },
-      {
-        'id': 1,
-        'title': 'Rent a polaroid',
-        'price': 100
-      },
-      {
-        'id': 2,
-        'title': 'Upgrade to a business class',
-        'price': 100
-      }
-]
+const BLANK_OFFERS = [
+  {id: 1, title: 'Upgrade to a business class', price: 190},
+  {id: 2, title: 'Choose the radio station', price: 30},
+  {id: 3, title: 'Choose temperature', price: 170},
+  {id: 4, title: "Drive quickly, I'm in a hurry", price: 100},
+  {id: 5, title: 'Drive slowly', price: 110}]
 
 const BLANK_DESTINATION = {
-  'id': 1,
-  'description': ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
-  'name': 'Toronto',
-  'pictures': []
+  description: "Vien, with crowded streets, with an embankment of a mighty river as a centre of attraction.",
+  id: 19,
+  name: "Vien",
+  pictures: [
+    {src: 'https://18.ecmascript.pages.academy/static/destinations/15.jpg', description: 'Vien city centre'},
+    {src: 'https://18.ecmascript.pages.academy/static/destinations/16.jpg', description: 'Vien biggest supermarket'},
+    {src: 'https://18.ecmascript.pages.academy/static/destinations/11.jpg', description: 'Vien park'},
+    {src: 'https://18.ecmascript.pages.academy/static/destinations/12.jpg', description: 'Vien street market'},
+    {src: 'https://18.ecmascript.pages.academy/static/destinations/13.jpg', description: 'Vien city centre'}
+  ]
 }
 
-const createEditPointTemplate = (point, currentOffers, currentDestination) => {
+const createEditPointTemplate = (point, currentOffers, currentDestination, city) => {
   const {
     type,
     dateFrom,
@@ -60,12 +52,12 @@ const createEditPointTemplate = (point, currentOffers, currentDestination) => {
 
   const getOption = (option) => {
     return(
-      `<option value="${option.city}"></option>`
+      `<option value="${option.name}"></option>`
     )
   }
 
   const createOption = () => {
-    const options = CITIES.map(getOption)
+    const options = city.map(getOption)
 
     return options.join('')
   }
@@ -216,11 +208,14 @@ const createEditPointTemplate = (point, currentOffers, currentDestination) => {
 };
 
 class EditPointView extends AbstractStatefulView {
-  constructor(point = BLANK_POINT, offers = BLANK_OFFERS, destination = BLANK_DESTINATION) {
+  constructor(city, allOffers, allDestinations, point = BLANK_POINT, offers = BLANK_OFFERS, destination = BLANK_DESTINATION) {
     super()
     this._state = EditPointView.parsePointToState(point);
     this._offers = offers;
+    this._allOffers = allOffers;
+    this._allDestinations = allDestinations;
     this._destination = destination;
+    this._city = city;
     this._prevOffers = offers;
     this._prevDestination = destination;
     this._datepicker = null;
@@ -230,7 +225,7 @@ class EditPointView extends AbstractStatefulView {
   }
 
   get template() {
-    return createEditPointTemplate(this._state, this._offers, this._destination);
+    return createEditPointTemplate(this._state, this._offers, this._destination,this._city);
   }
 
   setFormSubmitHandler = (callback) => {
@@ -289,13 +284,13 @@ class EditPointView extends AbstractStatefulView {
   _destinationChangeHandler = (evt) => {
     evt.preventDefault()
     const currentCity = evt.target.value
-    const currentId = CITIES.find((x) => x.city === currentCity)['id']
-    this._destination = destinations.find((x) => x.id === currentId)
+    const currentId = this._city.find((x) => x.name === currentCity)['id']
+    this._destination = this._allDestinations.find((x) => x.id === currentId)
     this.updateElement({destination: currentId})
   }
 
   _typeChangeHandler = (evt) => {
-    this._offers = offersByType.find((x) => x.type === evt.target.value)['offers']
+    this._offers = this._allOffers.find((x) => x.type === evt.target.value)['offers']
     this.updateElement({type: evt.target.value, offers: []})
   }
 
