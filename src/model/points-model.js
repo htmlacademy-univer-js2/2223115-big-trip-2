@@ -5,11 +5,16 @@ import offersByType from '../fish-data/offer';
 import destinations from '../fish-data/destination';
 
 class PointsModel extends Observable {
-  constructor() {
+  constructor(pointsApiService) {
     super();
+    this._pointsApiService = pointsApiService;
     this._points = Array.from({length: COUNT_POINT}, generatePoint);
     this._offers = offersByType;
     this._destinations = destinations;
+
+    this._pointsApiService.points.then((points) => {
+      console.log(points);
+    });
   }
 
   get points() {

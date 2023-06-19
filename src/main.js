@@ -4,12 +4,16 @@ import TripPresenter from './presenter/trip-presenter';
 import PointsModel from './model/points-model';
 import FilterPresenter from './presenter/filter-presenter';
 import NewPointButtonView from './view/new-point-button-view';
+import PointsApiService from './api-services/points-api-service';
+
+const AUTHORIZATION = 'Basic hsdhdnbmfklvsdkebndi';
+const END_POINT = 'https://18.ecmascript.pages.academy/big-trip';
 
 const filtersContainerElement = document.querySelector('.trip-controls__filters');
 const newPointContainerElement = document.querySelector('.trip-main')
 const tripContainerElement = document.querySelector('.trip-events');
 
-const pointsModel = new PointsModel();
+const pointsModel = new PointsModel(new PointsApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FiltersModel();
 const newPointButtonComponent = new NewPointButtonView();
 
