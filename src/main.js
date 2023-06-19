@@ -35,6 +35,8 @@ const handleNewPointButtonClick = () => {
     newPointButtonComponent.element.disabled = true;
 };
 
+filterPresenter.init();
+tripPresenter.init();
 offersModel.init().finally(() => {
   destinationsModel.init().finally(() => {
     pointsModel.init().finally(() => {
@@ -43,9 +45,3 @@ offersModel.init().finally(() => {
     });
   });
 });
-
-filterPresenter.init();
-tripPresenter.init();
-
-
-

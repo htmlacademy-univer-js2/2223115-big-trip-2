@@ -1,14 +1,21 @@
 import Observable from '../framework/observable.js';
 
-export default class DestinationsModel extends Observable {
-  _destinations = [];
-  _destinationsApiService = null;
-
+class DestinationsModel extends Observable {
   constructor(destinationsApiService) {
     super();
     this._destinationsApiService = destinationsApiService;
     this._destinations = []
-  }
+  };
+
+  get destinations() {
+    return this._destinations;
+  };
+
+  get cities() {
+    const cities = [];
+    this._destinations.forEach((destination) => cities.push({id: destination.id, name: destination.name}));
+    return cities;
+  };
 
   init = async () => {
     try {
@@ -17,14 +24,6 @@ export default class DestinationsModel extends Observable {
       this._destinations = [];
     }
   };
-
-  get destinations() {
-    return this._destinations;
-  }
-
-  get cities() {
-    const cities = [];
-    this._destinations.forEach((destination) => cities.push({id: destination.id, name: destination.name}));
-    return cities;
-  }
 }
+
+export default DestinationsModel;

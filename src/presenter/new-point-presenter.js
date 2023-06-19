@@ -1,15 +1,15 @@
 import { remove, render, RenderPosition } from "../framework/render";
-import EditPointView from "../view/edit-point";
-import { nanoid } from "nanoid";
+import EditPointView from "../view/edit-point-view";
 import { UserAction, UpdateType } from "../const";
 
 class NewPointPresenter {
   constructor(pointListContainer, changeData) {
     this._pointListContainer = pointListContainer;
-    this._changeData = changeData;
     this._pointEditComponent = null;
+    
+    this._changeData = changeData;
     this._destroyCallback = null
-  }
+  };
 
   init = (callback, offers, destinations, cities) => {
     this._destroyCallback = callback;
@@ -39,13 +39,31 @@ class NewPointPresenter {
     document.removeEventListener('keydown', this._escKeyDownHandler);
   };
 
+  setSaving = () => {
+    this._pointEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  };
+
+  setAborting = () => {
+    const resetFormState = () => {
+      this._pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this._pointEditComponent.shake(resetFormState);
+  };
+
   _handleFormSubmit = (point) => {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(), ...point},
+      point,
     );
-    this.destroy();
   };
 
   _handleDeleteClick = () => {

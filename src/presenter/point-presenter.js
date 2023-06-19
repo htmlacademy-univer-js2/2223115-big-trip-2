@@ -1,28 +1,30 @@
 import { render, replace, remove } from '../framework/render';
-import PointView from '../view/point';
-import EditPointView from '../view/edit-point';
+import PointView from '../view/point-view';
+import EditPointView from '../view/edit-point-view';
 import { UserAction, UpdateType } from '../const';
 import { getDifference } from '../utils';
 
 const Mode = {
     DEFAULT: 'DEFAULT',
     EDITING: 'EDITING'
-}
+};
 
 class PointPresenter {
     constructor (tripList, points, offers, destinations, cities, changeData, modeChange) {
         this._tripListComponent = tripList;
+        this._pointComponent = null;
+        this._pointEditComponent = null;
         this._pointsModel = points;
-        this._changeData = changeData;
-        this._handleModeChange = modeChange;
-        this._mode = Mode.DEFAULT;
+
         this._point = null;
         this._offers = offers;
         this._destinations = destinations;
         this._cities = cities;
-        this._pointComponent = null;
-        this._pointEditComponent = null;
-    }
+
+        this._changeData = changeData;
+        this._handleModeChange = modeChange;
+        this._mode = Mode.DEFAULT;
+    };
 
     init = (point) => {
         this._point = point;
@@ -54,24 +56,60 @@ class PointPresenter {
         }
       
         if (this._mode === Mode.EDITING) {
-            replace(this._pointEditComponent, prevPointEditComponent)
+            replace(this._pointComponent, prevPointEditComponent)
+            this._mode = Mode.DEFAULT
         }
 
         remove(prevPointComponent)
         remove(prevPointEditComponent)
-    } 
+    }; 
 
     destroy = () => {
         remove(this._pointComponent)
         remove(this._pointEditComponent)
-    }
+    };
 
     resetView = () => {
         if (this._mode !== Mode.DEFAULT) {
             this._pointEditComponent.reset(this._point)
             this._replaceFormToPoint()
         }
-    }
+    };
+
+    setSaving = () => {
+        if (this._mode === Mode.EDITING) {
+          this._pointEditComponent.updateElement({
+            isDisabled: true,
+            isSaving: true,
+          });
+        }
+    };
+    
+    setDeleting = () => {
+        if (this._mode === Mode.EDITING) {
+          this._pointEditComponent.updateElement({
+            isDisabled: true,
+            isDeleting: true,
+          });
+        }
+    };
+
+    setAborting = () => {
+        if (this._mode === Mode.DEFAULT) {
+          this._pointComponent.shake();
+          return;
+        }
+    
+        const resetFormState = () => {
+          this._pointEditComponent.updateElement({
+            isDisabled: false,
+            isSaving: false,
+            isDeleting: false,
+          });
+        };
+    
+        this._pointEditComponent.shake(resetFormState);
+    };
 
     _replacePointToForm = () => {
         this._handleModeChange()
@@ -84,19 +122,19 @@ class PointPresenter {
         this._mode = Mode.DEFAULT
     };
 
-    _onEscKeyDown = (evt) => {
+    _escKeyDownHandler = (evt) => {
         if (evt.key === 'Escape' || evt.key === 'Esc') {
             evt.preventDefault();
             this._pointEditComponent.reset(this._point)
             this._replaceFormToPoint();
-            document.removeEventListener('keydown', this._onEscKeyDown);
+            document.removeEventListener('keydown', this._escKeyDownHandler);
         }
     };
 
     _handleEditSubmitClick = () => {
         this._replacePointToForm(this._points);
-        document.addEventListener('keydown', this._onEscKeyDown);
-    }
+        document.addEventListener('keydown', this._escKeyDownHandler);
+    };
 
     _handleFavoriteClick = () => {
         this._changeData(
@@ -112,21 +150,20 @@ class PointPresenter {
             getDifference(this._point.dateTo, this._point.dateFrom, 'minute') !==
             getDifference(update.dateTo, update.dateFrom, 'minute')
 
-        this._replaceFormToPoint()
 
         this._changeData(
             UserAction.UPDATE_POINT,
             isMinorUpdate? UpdateType.MINOR: UpdateType.PATCH,
             update)
 
-        document.removeEventListener('keydown', this._onEscKeyDown);
-    }
+        document.removeEventListener('keydown', this._escKeyDownHandler);
+    };
 
     _handleButtonlick = () => {
         this._pointEditComponent.reset(this._point)
         this._replaceFormToPoint()
-        document.removeEventListener('keydown', this._onEscKeyDown)
-    }
+        document.removeEventListener('keydown', this._escKeyDownHandler)
+    };
 
     _handleDeleteClick = (point) => {
         this._changeData(
@@ -134,7 +171,7 @@ class PointPresenter {
             UpdateType.MINOR,
             point
         );
-    }
+    };
 }
 
 export default PointPresenter;

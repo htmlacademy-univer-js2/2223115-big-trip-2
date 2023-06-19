@@ -6,26 +6,10 @@ class PointsModel extends Observable {
     super();
     this._pointsApiService = pointsApiService;
     this._points = [];
-  }
+  };
 
   get points() {
     return this._points;
-  }
-
-  _adaptToClient = (point) => {
-    const adaptedPoint = {...point,
-      basePrice: point['base_price'],
-      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
-      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
-      isFavorite: point['is_favorite']
-    };
-
-    delete adaptedPoint['base_price'];
-    delete adaptedPoint['date_from'];
-    delete adaptedPoint['date_to'];
-    delete adaptedPoint['is_favorite'];
-
-    return adaptedPoint;
   };
 
   init = async () => {
@@ -59,25 +43,55 @@ class PointsModel extends Observable {
     } catch(err) {
       throw new Error('Can\'t update point');
     }
-  }
+  };
 
-  addPoint = (updateType, update) => {
-    this._points = [update, 
-      ...this._points];
+  addPoint = async (updateType, update) => {
+    try {
+      const response = await this._pointsApiService.addPoint(update);
+      const updatedPoint = this._adaptToClient(response);
+      this._points = [updatedPoint, 
+        ...this._points];
+      this._notify(updateType, updatedPoint);
+    } catch(err) {
+      throw new Error('Can\'t add point');
+    }
+  };
 
-    this._notify(updateType, update);
-  }
-
-  deletePoint = (updateType, update) => {
+  deletePoint = async (updateType, update) => {
     const deletedIndex = this._points.findIndex((point) => point.id === update.id);
 
-    this._points = [
-      ...this._points.slice(0, deletedIndex),
-      ...this._points.slice(deletedIndex + 1)
-    ]
-    
-    this._notify(updateType, update);
-  }
+    if (deletedIndex === -1) {
+      throw new Error('Can\'t delete unexisting point');
+    }
+
+    try {
+      await this._pointsApiService.deletePoint(update);
+      this._points = [
+        ...this._points.slice(0, deletedIndex),
+        ...this._points.slice(deletedIndex + 1)
+      ]
+      this._notify(updateType);
+    } catch(err) {
+      throw new Error('Can\'t delete point');
+    }
+  };
+
+  _adaptToClient = (point) => {
+    const adaptedPoint = {...point,
+      basePrice: point['base_price'],
+      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
+      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
+      isFavorite: point['is_favorite']
+    };
+
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['is_favorite'];
+
+    return adaptedPoint;
+  };
 }
 
 export default PointsModel;
+

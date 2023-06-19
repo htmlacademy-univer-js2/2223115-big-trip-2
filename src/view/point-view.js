@@ -11,7 +11,6 @@ const createPointTemplate = (point, currentOffers, currentDesctination) => {
     isFavorite,
     offers} = point;
 
-
   const date = dateFrom !== null
     ? humanizeDate(dateFrom, 'D MMMM')
     : 'June 9';
@@ -99,35 +98,35 @@ const createPointTemplate = (point, currentOffers, currentDesctination) => {
 
 class PointView extends AbstractView {
   constructor(point, offers, destination) {
-    super()
+    super();
     this.point = point;
     this.offers = offers;
     this.destination = destination;
-  }
+  };
 
   get template() {
     return createPointTemplate(this.point, this.offers, this.destination);
-  }
+  };
 
   setEditClickHandler = (callback) => {
     this._callback.click = callback
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this._editClickHandler);
-  }
+  };
 
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback
     this.element.querySelector('.event__favorite-btn').addEventListener('click', this._favoriteClickHandler);
-  }
+  };
 
   _editClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.click();
-  }
+  };
 
   _favoriteClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.favoriteClick();
-  }
+  };
 }
 
 export default PointView;
