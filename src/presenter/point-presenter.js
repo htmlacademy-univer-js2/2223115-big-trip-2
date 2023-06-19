@@ -10,29 +10,29 @@ const Mode = {
 }
 
 class PointPresenter {
-    constructor (tripList, points, changeData, modeChange) {
+    constructor (tripList, points, offers, destinations, cities, changeData, modeChange) {
         this._tripListComponent = tripList;
         this._pointsModel = points;
         this._changeData = changeData;
         this._handleModeChange = modeChange;
         this._mode = Mode.DEFAULT;
         this._point = null;
-        this._offers = null;
-        this._destination = null;
+        this._offers = offers;
+        this._destinations = destinations;
+        this._cities = cities;
         this._pointComponent = null;
         this._pointEditComponent = null;
     }
 
     init = (point) => {
-        this._point = point
-
+        this._point = point;
         const prevPointComponent = this._pointComponent
         const prevPointEditComponent = this._pointEditComponent
-
-        this._offers = this._pointsModel.getOffers(this._point)
-        this._destination = this._pointsModel.getDestination(this._point)
-        this._pointComponent = new PointView(this._point, this._offers, this._destination);
-        this._pointEditComponent = new EditPointView(this._point, this._offers, this._destination);
+        const currentOffers = this._offers.find((x) => x.type === this._point['type'])['offers']
+        const currentDestination = this._destinations.find((x) => x.id === point['destination']);
+    
+        this._pointComponent = new PointView(this._point, currentOffers, currentDestination);
+        this._pointEditComponent = new EditPointView(this._cities, this._offers, this._destinations, this._point, currentOffers, currentDestination);
 
         this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick)
 

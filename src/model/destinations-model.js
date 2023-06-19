@@ -21,4 +21,10 @@ export default class DestinationsModel extends Observable {
   get destinations() {
     return this._destinations;
   }
+
+  get cities() {
+    const cities = [];
+    this._destinations.forEach((destination) => cities.push({id: destination.id, name: destination.name}));
+    return cities;
+  }
 }

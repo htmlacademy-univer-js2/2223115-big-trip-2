@@ -1,4 +1,4 @@
-import { render, remove} from '../framework/render';
+import { render, remove, RenderPosition} from '../framework/render';
 import { sortByDay, sortByPrice, sortByTime } from '../utils';
 import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
@@ -10,13 +10,15 @@ import { SORTED_TYPE, FILTERS_MESSAGE, UserAction, UpdateType, FILTERS_TYPE} fro
 import { filters } from '../utils';
 
 class TripPresenter { 
-  constructor(container, pointsModel, filterModel) {
+  constructor(container, pointsModel, offersModel, destinationsModel, filterModel) {
     this._tripListComponent = new TripListView();
     this._loadingComponent = new LoadingView();
     this._sortComponent = null;
     this._firstNessageComponent = null;
     this._container = container;
     this._pointsModel = pointsModel;
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
     this._filterModel = filterModel;
     this._pointPresenter = new Map();
     this._newPointPresenter = new NewPointPresenter(this._tripListComponent.element, this._handleViewAction);
@@ -34,7 +36,7 @@ class TripPresenter {
 
     switch (this._currentSortType){
       case SORTED_TYPE.PRICE:
-        return filters[filterType](sortByPrice(this._pointsModel))
+        return (sortByPrice([...filteredPoints], this._offersModel.offers))
       case SORTED_TYPE.TIME:
         return sortByTime([...filteredPoints])
     }
@@ -49,7 +51,7 @@ class TripPresenter {
   createPoint = (callback) => {
     this._currentSortType = SORTED_TYPE.DAY;
     this._filterModel.setFilter(UpdateType.MAJOR, FILTERS_TYPE.EVERYTHING);
-    this._newPointPresenter.init(callback)
+    this._newPointPresenter.init(callback, this._offersModel.offers ,this._destinationsModel.destinations, this._destinationsModel.cities)
   }
 
   _handleModeChange = () => {
@@ -115,7 +117,7 @@ class TripPresenter {
 
   _renderSort = () => {
       this._sortComponent = new SortView(this._currentSortType)
-      render(this._sortComponent, this._container);
+      render(this._sortComponent, this._container, RenderPosition.AFTERBEGIN);
       this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
@@ -124,9 +126,16 @@ class TripPresenter {
   }
 
   _renderPoint(point) {
+    const offers = this._offersModel.offers;
+    const destinations = this._destinationsModel.destinations;
+    const cities = this._destinationsModel.cities;
+
     const pointPresenter = new PointPresenter(
       this._tripListComponent.element, 
       this._pointsModel,
+      offers,
+      destinations,
+      cities,
       this._handleViewAction,
       this._handleModeChange);
 
@@ -142,12 +151,13 @@ class TripPresenter {
       return
     }
 
+    this._renderSort()
+
     if (this.points.length === 0) {
       this._renderFirstMessage()
       return
     }
 
-    this._renderSort()
     this._renderPoints(this.points)
   }
   

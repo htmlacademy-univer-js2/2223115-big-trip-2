@@ -11,14 +11,13 @@ class NewPointPresenter {
     this._destroyCallback = null
   }
 
-  init = (callback) => {
+  init = (callback, offers, destinations, cities) => {
     this._destroyCallback = callback;
-
     if (this._pointEditComponent !== null) {
       return;
     }
 
-    this._pointEditComponent = new EditPointView();
+    this._pointEditComponent = new EditPointView(cities, offers, destinations);
     this._pointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
