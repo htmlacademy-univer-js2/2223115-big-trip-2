@@ -1,4 +1,5 @@
 import { render, remove, RenderPosition} from '../framework/render';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import { sortByDay, sortByPrice, sortByTime } from '../utils';
 import SortView from '../view/sort';
 import TripListView from '../view/trip-list';
@@ -8,6 +9,11 @@ import PointPresenter from './point-presenter';
 import NewPointPresenter from './new-point-presenter';
 import { SORTED_TYPE, FILTERS_MESSAGE, UserAction, UpdateType, FILTERS_TYPE} from '../const';
 import { filters } from '../utils';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 class TripPresenter { 
   constructor(container, pointsModel, offersModel, destinationsModel, filterModel) {
@@ -24,6 +30,7 @@ class TripPresenter {
     this._newPointPresenter = new NewPointPresenter(this._tripListComponent.element, this._handleViewAction);
     this._currentSortType = SORTED_TYPE.DAY;
     this._isLoading = true;
+    this._UiBlocker = new UiBlocker(TimeLimit.LOWER_LIMIT, TimeLimit.UPPER_LIMIT);
 
     this._pointsModel.addObserver(this._handleModelEvent)
     this._filterModel.addObserver(this._handleModelEvent)
@@ -60,6 +67,8 @@ class TripPresenter {
   }
 
   _handleViewAction = async (actionType, updateType, update) => {
+    this._UiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this._pointPresenter.get(update.id).setSaving();
@@ -86,6 +95,8 @@ class TripPresenter {
         }
         break;
     }
+
+    this._UiBlocker.unblock();
   };
 
   _handleModelEvent = (updateType, update) => {
