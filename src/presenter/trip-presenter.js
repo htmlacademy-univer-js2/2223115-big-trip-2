@@ -62,12 +62,15 @@ class TripPresenter {
   _handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
+        this._pointPresenter.get(update.id).setSaving();
         this._pointsModel.updatePoint(updateType, update);
         break;
       case UserAction.ADD_POINT:
+        this._newPointPresenter.setSaving();
         this._pointsModel.addPoint(updateType, update);
         break;
       case UserAction.DELETE_POINT:
+        this._pointPresenter.get(update.id).setDeleting();
         this._pointsModel.deletePoint(updateType, update);
         break;
     }

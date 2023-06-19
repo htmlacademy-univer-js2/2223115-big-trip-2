@@ -143,16 +143,16 @@ class PointPresenter {
             isSaving: true,
           });
         }
-      };
+    };
     
-      setDeleting = () => {
+    setDeleting = () => {
         if (this._mode === Mode.EDITING) {
           this._pointEditComponent.updateElement({
             isDisabled: true,
             isDeleting: true,
           });
         }
-      };
+    };
 }
 
 export default PointPresenter;
