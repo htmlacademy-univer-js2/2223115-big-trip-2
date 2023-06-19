@@ -39,7 +39,10 @@ const createEditPointTemplate = (point, currentOffers, currentDestination, city)
     type,
     dateFrom,
     dateTo,
-    offers} = point;
+    offers,
+    isDisabled,
+    isSaving,
+    isDeleting} = point;
 
   const checkTypePoint = (currentType) => {
 
@@ -64,7 +67,7 @@ const createEditPointTemplate = (point, currentOffers, currentDestination, city)
 
   const getTemplateOffer = (offer) => {
       return(
-        `<div class="event__offer-selector">
+        `<div class="event__offer-selector" ${isDisabled ? 'disabled' : ''}>
           <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-${offer['id']}" type="checkbox" name="event-offer-comfort" ${offers.find((x) => x === offer['id'])? 'checked': '' }>
           <label class="event__offer-label" for="event-offer-comfort-${offer['id']}">
           <span class="event__offer-title">${offer['title']}</span>
@@ -95,7 +98,7 @@ const createEditPointTemplate = (point, currentOffers, currentDestination, city)
       <form class="event event--edit" action="#" method="post">
           <header class="event__header">
           <div class="event__type-wrapper">
-              <label class="event__type  event__type-btn" for="event-type-toggle-1">
+              <label class="event__type  event__type-btn" for="event-type-toggle-1" ${isDisabled ? 'disabled' : ''}>
               <span class="visually-hidden">Choose event type</span>
               <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
               </label>
@@ -157,13 +160,13 @@ const createEditPointTemplate = (point, currentOffers, currentDestination, city)
               <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
               </label>
-              <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(currentDestination['name'])}" list="destination-list-1">
+              <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(currentDestination['name'])}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
               <datalist id="destination-list-1">
               ${createOption()}
               </datalist>
           </div>
 
-          <div class="event__field-group  event__field-group--time">
+          <div class="event__field-group  event__field-group--time" ${isDisabled ? 'disabled' : ''}>
               <label class="visually-hidden" for="event-start-time-1">From</label>
               <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${humanizeDate(dateFrom, 'DD/MM/YY')} ${humanizeTime(dateFrom)}">
               &mdash;
@@ -176,11 +179,15 @@ const createEditPointTemplate = (point, currentOffers, currentDestination, city)
               <span class="visually-hidden">Price</span>
               &euro;
               </label>
-              <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getFinalPrice(currentOffers, point)}">
+              <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${getFinalPrice(currentOffers, point)}" ${isDisabled ? 'disabled' : ''}>
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>
+            ${isSaving ? 'saving...' : 'save'}
+          </button>
+          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>
+            ${isDeleting ? 'deleting...' : 'delete'}
+          </button>
           <button class="event__rollup-btn" type="button">
               <span class="visually-hidden">Open event</span>
           </button>
@@ -379,7 +386,7 @@ class EditPointView extends AbstractStatefulView {
 
   static parseStateToPoint = (state) => {
     const point = {...state}
-    
+
     delete point.isDisabled;
     delete point.isSaving;
     delete point.isDeleting;
