@@ -183,10 +183,10 @@ const createEditPointTemplate = (point, currentOffers, currentDestination, city)
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>
-            ${isSaving ? 'saving...' : 'save'}
+            ${isSaving ? 'Saving...' : 'Save'}
           </button>
           <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>
-            ${isDeleting ? 'deleting...' : 'delete'}
+            ${isDeleting ? 'Deleting...' : 'Delete'}
           </button>
           <button class="event__rollup-btn" type="button">
               <span class="visually-hidden">Open event</span>

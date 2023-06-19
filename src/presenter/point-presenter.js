@@ -54,7 +54,8 @@ class PointPresenter {
         }
       
         if (this._mode === Mode.EDITING) {
-            replace(this._pointEditComponent, prevPointEditComponent)
+            replace(this._pointComponent, prevPointEditComponent)
+            this._mode = Mode.DEFAULT
         }
 
         remove(prevPointComponent)
@@ -112,7 +113,6 @@ class PointPresenter {
             getDifference(this._point.dateTo, this._point.dateFrom, 'minute') !==
             getDifference(update.dateTo, update.dateFrom, 'minute')
 
-        this._replaceFormToPoint()
 
         this._changeData(
             UserAction.UPDATE_POINT,
@@ -135,6 +135,24 @@ class PointPresenter {
             point
         );
     }
+
+    setSaving = () => {
+        if (this._mode === Mode.EDITING) {
+          this._pointEditComponent.updateElement({
+            isDisabled: true,
+            isSaving: true,
+          });
+        }
+      };
+    
+      setDeleting = () => {
+        if (this._mode === Mode.EDITING) {
+          this._pointEditComponent.updateElement({
+            isDisabled: true,
+            isDeleting: true,
+          });
+        }
+      };
 }
 
 export default PointPresenter;
