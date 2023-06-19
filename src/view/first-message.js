@@ -5,9 +5,9 @@ const createFirstMessageTeplate = (message) => (
 );
 
 class FirstMessageView extends AbstractView {
-  constructor() {
+  constructor(message) {
     super()
-    this._message = 'Click New Event to create your first point';
+    this._message = message;
   }
 
   get template() {

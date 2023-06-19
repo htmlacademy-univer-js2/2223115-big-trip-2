@@ -1,6 +1,8 @@
 import { render, replace, remove } from '../framework/render';
 import PointView from '../view/point';
 import EditPointView from '../view/edit-point';
+import { UserAction, UpdateType } from '../const';
+import { getDifference } from '../utils';
 
 const Mode = {
     DEFAULT: 'DEFAULT',
@@ -39,6 +41,8 @@ class PointPresenter {
         this._pointEditComponent.setFormSubmitHandler(this._handleFormSubmitClick);
     
         this._pointEditComponent.setButtonClickHandler(this._handleButtonlick);
+
+        this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
         if (prevPointComponent == null || prevPointEditComponent === null) {
             render(this._pointComponent, this._tripListComponent)
@@ -95,12 +99,26 @@ class PointPresenter {
     }
 
     _handleFavoriteClick = () => {
-        this._changeData({...this._point, isFavorite: !this._point.isFavorite})
+        this._changeData(
+            UserAction.UPDATE_POINT, 
+            UpdateType.MINOR,
+            {...this._point, isFavorite: !this._point.isFavorite})
     };
 
-    _handleFormSubmitClick = (point) => {
+    _handleFormSubmitClick = (update) => {
+        const isMinorUpdate = 
+            this._point.basePrice !== update.basePrice ||
+            this._point.offers.toString() !== update.offers.toString() ||
+            getDifference(this._point.dateTo, this._point.dateFrom, 'minute') !==
+            getDifference(update.dateTo, update.dateFrom, 'minute')
+
         this._replaceFormToPoint()
-        this._changeData(point)
+
+        this._changeData(
+            UserAction.UPDATE_POINT,
+            isMinorUpdate? UpdateType.MINOR: UpdateType.PATCH,
+            update)
+
         document.removeEventListener('keydown', this._onEscKeyDown);
     }
 
@@ -108,6 +126,14 @@ class PointPresenter {
         this._pointEditComponent.reset(this._point)
         this._replaceFormToPoint()
         document.removeEventListener('keydown', this._onEscKeyDown)
+    }
+
+    _handleDeleteClick = (point) => {
+        this._changeData(
+            UserAction.DELETE_POINT,
+            UpdateType.MINOR,
+            point
+        );
     }
 }
 

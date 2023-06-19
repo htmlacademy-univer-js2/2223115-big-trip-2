@@ -4,18 +4,50 @@ import offersByType from '../fish-data/offer';
 import destinations from '../fish-data/destination';
 import { CITIES } from '../const';
 import dayjs from 'dayjs';
+import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+const BLANK_POINT = {
+  type: 'taxi',
+  basePrice: 99,
+  destination: 1,
+  dateFrom: '2019-07-10T22:55:56.845Z',
+  dateTo: '2019-07-11T11:22:13.375Z',
+  offers: []
+}
+
+const BLANK_OFFERS =[
+      {
+        'id': 0,
+        'title': 'Add a child safety seat',
+        'price': 100
+      },
+      {
+        'id': 1,
+        'title': 'Rent a polaroid',
+        'price': 100
+      },
+      {
+        'id': 2,
+        'title': 'Upgrade to a business class',
+        'price': 100
+      }
+]
+
+const BLANK_DESTINATION = {
+  'id': 1,
+  'description': ['Lorem ipsum dolor sit amet, consectetur adipiscing elit.'],
+  'name': 'Toronto',
+  'pictures': []
+}
 
 const createEditPointTemplate = (point, currentOffers, currentDestination) => {
   const {
     type,
-    basePrice,
     dateFrom,
     dateTo,
     offers} = point;
-
 
   const checkTypePoint = (currentType) => {
 
@@ -25,6 +57,18 @@ const createEditPointTemplate = (point, currentOffers, currentDestination) => {
 
     return '';
   };
+
+  const getOption = (option) => {
+    return(
+      `<option value="${option.city}"></option>`
+    )
+  }
+
+  const createOption = () => {
+    const options = CITIES.map(getOption)
+
+    return options.join('')
+  }
 
   const getTemplateOffer = (offer) => {
       return(
@@ -121,11 +165,9 @@ const createEditPointTemplate = (point, currentOffers, currentDestination) => {
               <label class="event__label  event__type-output" for="event-destination-1">
               ${type}
               </label>
-              <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${currentDestination['name']}" list="destination-list-1">
+              <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(currentDestination['name'])}" list="destination-list-1">
               <datalist id="destination-list-1">
-              <option value="Amsterdam"></option>
-              <option value="Geneva"></option>
-              <option value="Chamonix"></option>
+              ${createOption()}
               </datalist>
           </div>
 
@@ -174,7 +216,7 @@ const createEditPointTemplate = (point, currentOffers, currentDestination) => {
 };
 
 class EditPointView extends AbstractStatefulView {
-  constructor(point, offers, destination) {
+  constructor(point = BLANK_POINT, offers = BLANK_OFFERS, destination = BLANK_DESTINATION) {
     super()
     this._state = EditPointView.parsePointToState(point);
     this._offers = offers;
@@ -182,7 +224,6 @@ class EditPointView extends AbstractStatefulView {
     this._prevOffers = offers;
     this._prevDestination = destination;
     this._datepicker = null;
-
     this._setInnerHandlers();
     this._setDatepickerTo();
     this._setDatepickerFrom();
@@ -212,8 +253,21 @@ class EditPointView extends AbstractStatefulView {
     this._callback.click();
   }
 
+  setDeleteClickHandler = (callback) => {
+    this._callback.delete = callback
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this._deleteClickHandler)
+  }
+
+  _deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.delete(EditPointView.parseStateToPoint(this._state));
+  }
+
   _priceChangeHandler = (evt) => {
     evt.preventDefault();
+    if (isNaN(Number(evt.target.value))) {
+      return this._state;
+    }
     this._setState({
       basePrice: Number(evt.target.value),
     });
@@ -250,7 +304,8 @@ class EditPointView extends AbstractStatefulView {
     this._setDatepickerTo();
     this._setDatepickerFrom();
     this.setFormSubmitHandler(this._callback.submit);
-    this.setButtonClickHandler(this._callback.click)
+    this.setButtonClickHandler(this._callback.click);
+    this.setDeleteClickHandler(this._callback.delete);
   };
 
   _setInnerHandlers = () => {

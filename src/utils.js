@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { FILTERS_TYPE, SORTED_TYPE } from './const';
+import { FILTERS_TYPE } from './const';
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -13,7 +13,7 @@ const humanizeTime = (date) => dayjs(date).format('HH:mm');
 const getDifference = (date1, date2, param) => dayjs(date2).diff(date1, param);
 const isPointExpired = (date) => date && dayjs().isAfter(date, 'D');
 
-const filter = {
+const filters = {
   [FILTERS_TYPE.EVERYTHING]: (points) => points,
   [FILTERS_TYPE.FUTURE]: (points) => points.filter((point) => !isPointExpired(point.dateFrom)),
   [FILTERS_TYPE.PAST]: (points) => points.filter((point) => isPointExpired(point.dateTo)),
@@ -21,6 +21,10 @@ const filter = {
 
 const getFinalPrice = (currentOffers, point) => {
   let finalPrice = point.basePrice
+  if (point.offers.length === 0) {
+    return finalPrice
+  }
+
   point.offers.forEach((id) => {
     finalPrice += currentOffers[id - 1]['price']
   })
@@ -36,6 +40,4 @@ const sortByPrice = (pointsModel) => pointsModel.points.sort((prev, next) => {
   return prevFinalPrice - nextFinalPrice;
 })
 
-const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item)
-
-export {getRandomInteger, humanizeDate, humanizeTime, getDifference, getFinalPrice, filter, sortByDay, sortByPrice, sortByTime, updateItem};
+export {getRandomInteger, humanizeDate, humanizeTime, getDifference, getFinalPrice, filters, sortByDay, sortByPrice, sortByTime};
