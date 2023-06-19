@@ -1,11 +1,11 @@
 import ApiService from '../framework/api-service.js';
 import { Method } from '../const.js';
 
-export default class DestinationsApiService extends ApiService {
+class DestinationsApiService extends ApiService {
   get destinations() {
     return this._load({url: 'destinations'})
       .then(ApiService.parseResponse);
-  }
+  };
 
   updateDestinations = async (destination) => {
     const response = await this._load({
@@ -20,3 +20,5 @@ export default class DestinationsApiService extends ApiService {
     return parsedResponse;
   };
 }
+
+export default DestinationsApiService;

@@ -1,14 +1,15 @@
 import { remove, render, RenderPosition } from "../framework/render";
-import EditPointView from "../view/edit-point";
+import EditPointView from "../view/edit-point-view";
 import { UserAction, UpdateType } from "../const";
 
 class NewPointPresenter {
   constructor(pointListContainer, changeData) {
     this._pointListContainer = pointListContainer;
-    this._changeData = changeData;
     this._pointEditComponent = null;
+    
+    this._changeData = changeData;
     this._destroyCallback = null
-  }
+  };
 
   init = (callback, offers, destinations, cities) => {
     this._destroyCallback = callback;

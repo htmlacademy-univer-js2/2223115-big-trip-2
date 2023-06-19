@@ -6,14 +6,13 @@ const createFirstMessageTeplate = (message) => (
 
 class FirstMessageView extends AbstractView {
   constructor(message) {
-    super()
+    super();
     this._message = message;
-  }
+  };
 
   get template() {
     return createFirstMessageTeplate(this._message);
-  }
+  };
 }
 
 export default FirstMessageView;
-

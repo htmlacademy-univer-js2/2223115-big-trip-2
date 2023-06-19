@@ -8,7 +8,7 @@ const createTripListTemplate = () => (
 class TripListView extends AbstractView {
   get template() {
     return createTripListTemplate();
-  }
+  };
 }
 
 export default TripListView;

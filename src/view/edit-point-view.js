@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+
 const BLANK_POINT = {
   type: 'taxi',
   basePrice: 100,
@@ -12,12 +13,15 @@ const BLANK_POINT = {
   dateTo: '2019-07-11T11:22:13.375Z',
   offers: []
 }
+
 const BLANK_OFFERS = [
   {id: 1, title: 'Upgrade to a business class', price: 190},
   {id: 2, title: 'Choose the radio station', price: 30},
   {id: 3, title: 'Choose temperature', price: 170},
   {id: 4, title: "Drive quickly, I'm in a hurry", price: 100},
-  {id: 5, title: 'Drive slowly', price: 110}]
+  {id: 5, title: 'Drive slowly', price: 110}
+]
+
 const BLANK_DESTINATION = {
   description: "Vien, with crowded streets, with an embankment of a mighty river as a centre of attraction.",
   id: 19,
@@ -30,6 +34,7 @@ const BLANK_DESTINATION = {
     {src: 'https://18.ecmascript.pages.academy/static/destinations/13.jpg', description: 'Vien city centre'}
   ]
 }
+
 const createEditPointTemplate = (point, currentOffers, currentDestination, city) => {
   const {
     type,
@@ -46,15 +51,18 @@ const createEditPointTemplate = (point, currentOffers, currentDestination, city)
     }
     return '';
   };
+
   const getOption = (option) => {
     return(
       `<option value="${option.name}"></option>`
     )
-  }
+  };
+
   const createOption = () => {
     const options = city.map(getOption)
     return options.join('')
-  }
+  };
+
   const getTemplateOffer = (offer) => {
       return(
         `<div class="event__offer-selector">
@@ -65,18 +73,22 @@ const createEditPointTemplate = (point, currentOffers, currentDestination, city)
           <span class="event__offer-price">${offer['price']}</span>
           </label>
         </div>`);
-  } 
+  };
+
   const createOffersElement = () => {
     const offersView = currentOffers.map(getTemplateOffer);
     return offersView.join(' ');
   };
+
   const getTemplatePhoto = (photo) => (
     `<img class="event__photo" src="${photo['src']}" alt="Event photo">`
   );
+
   const createPhotosElement = () => {
     const photosView = currentDestination['pictures'].map(getTemplatePhoto);
     return photosView.join(' ');
   };
+
   return(
     `<li class="trip-events__item">
       <form class="event event--edit" action="#" method="post">
@@ -184,106 +196,27 @@ const createEditPointTemplate = (point, currentOffers, currentDestination, city)
 
 class EditPointView extends AbstractStatefulView {
   constructor(city, allOffers, allDestinations, point = BLANK_POINT, offers = BLANK_OFFERS, destination = BLANK_DESTINATION) {
-    super()
+    super();
     this._state = EditPointView.parsePointToState(point);
-    this._offers = offers;
     this._allOffers = allOffers;
     this._allDestinations = allDestinations;
+    this._offers = offers;
     this._destination = destination;
     this._city = city;
+
     this._prevOffers = offers;
     this._prevDestination = destination;
+
     this._datepicker = null;
+
     this._setInnerHandlers();
     this._setDatepickerTo();
     this._setDatepickerFrom();
-  }
+  };
 
   get template() {
     return createEditPointTemplate(this._state, this._offers, this._destination,this._city);
-  }
-
-  setFormSubmitHandler = (callback) => {
-    this._callback.submit = callback
-    this.element.querySelector('form').addEventListener('submit', this._formSubmitHandler);
-  }
-
-  _formSubmitHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.submit(EditPointView.parseStateToPoint(this._state));
-  }
-
-  setButtonClickHandler = (callback) => {
-    this._callback.click = callback
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this._buttonClickHandler);
-  }
-
-  _buttonClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.click();
-  }
-
-  setDeleteClickHandler = (callback) => {
-    this._callback.delete = callback
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this._deleteClickHandler)
-  }
-
-  _deleteClickHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.delete(EditPointView.parseStateToPoint(this._state));
-  }
-
-  _priceChangeHandler = (evt) => {
-    evt.preventDefault();
-    if (isNaN(Number(evt.target.value))) {
-      return this._state;
-    }
-    this._setState({
-      basePrice: Number(evt.target.value),
-    });
-  }
-
-  _offersChangeHandler = (evt) => {
-    const checkedOfferId = Number(evt.target.id.slice(-1));
-    if (this._state.offers.includes(checkedOfferId)) {
-      this._state.offers = this._state.offers.filter((x) => x !== checkedOfferId);
-    }
-    else {
-      this._state.offers.push(checkedOfferId);
-    }
-    this.updateElement({
-      offers: this._state.offers,
-    });
   };
-
-  _destinationChangeHandler = (evt) => {
-    evt.preventDefault()
-    const currentCity = evt.target.value
-    const currentId = this._city.find((x) => x.name === currentCity)['id']
-    this._destination = this._allDestinations.find((x) => x.id === currentId)
-    this.updateElement({destination: currentId})
-  }
-
-  _typeChangeHandler = (evt) => {
-    this._offers = this._allOffers.find((x) => x.type === evt.target.value)['offers']
-    this.updateElement({type: evt.target.value, offers: []})
-  }
-
-  _restoreHandlers = () => {
-    this._setInnerHandlers();
-    this._setDatepickerTo();
-    this._setDatepickerFrom();
-    this.setFormSubmitHandler(this._callback.submit);
-    this.setButtonClickHandler(this._callback.click);
-    this.setDeleteClickHandler(this._callback.delete);
-  };
-
-  _setInnerHandlers = () => {
-    this.element.querySelector('.event__type-group').addEventListener('change',  this._typeChangeHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this._destinationChangeHandler);
-    this.element.querySelector('.event__section--offers').addEventListener('change', this._offersChangeHandler);
-    this.element.querySelector('.event__input--price').addEventListener('change', this._priceChangeHandler);
-  }
 
   reset = (point) => {
     this._offers = this._prevOffers;
@@ -291,7 +224,7 @@ class EditPointView extends AbstractStatefulView {
     this.updateElement(
       EditPointView.parsePointToState(point)
     )
-  }
+  };
 
   removeElement = () => {
     super.removeElement();
@@ -299,18 +232,6 @@ class EditPointView extends AbstractStatefulView {
       this._datepicker.destroy();
       this._datepicker = null;
     }
-  };
-
-  _pointDateFromChangeHandler = ([userDate]) => {
-    this.updateElement({
-      dateFrom: userDate,
-    });
-  };
-
-  _pointDateToChangeHandler = ([userDate]) => {
-    this.updateElement({
-      dateTo: userDate,
-    });
   };
 
   _setDatepickerFrom = () => {
@@ -344,6 +265,100 @@ class EditPointView extends AbstractStatefulView {
     }
   };
 
+  setFormSubmitHandler = (callback) => {
+    this._callback.submit = callback
+    this.element.querySelector('form').addEventListener('submit', this._formSubmitHandler);
+  };
+
+  _formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.submit(EditPointView.parseStateToPoint(this._state));
+  };
+
+  setButtonClickHandler = (callback) => {
+    this._callback.click = callback
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this._buttonClickHandler);
+  };
+
+  _buttonClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  };
+
+  setDeleteClickHandler = (callback) => {
+    this._callback.delete = callback
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this._deleteClickHandler)
+  };
+
+  _deleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.delete(EditPointView.parseStateToPoint(this._state));
+  };
+
+  _priceChangeHandler = (evt) => {
+    evt.preventDefault();
+    if (isNaN(Number(evt.target.value))) {
+      return this._state;
+    }
+    this._setState({
+      basePrice: Number(evt.target.value),
+    });
+  };
+
+  _offersChangeHandler = (evt) => {
+    const checkedOfferId = Number(evt.target.id.slice(-1));
+    if (this._state.offers.includes(checkedOfferId)) {
+      this._state.offers = this._state.offers.filter((x) => x !== checkedOfferId);
+    }
+    else {
+      this._state.offers.push(checkedOfferId);
+    }
+    this.updateElement({
+      offers: this._state.offers,
+    });
+  };
+
+  _destinationChangeHandler = (evt) => {
+    evt.preventDefault()
+    const currentCity = evt.target.value
+    const currentId = this._city.find((x) => x.name === currentCity)['id']
+    this._destination = this._allDestinations.find((x) => x.id === currentId)
+    this.updateElement({destination: currentId})
+  };
+
+  _typeChangeHandler = (evt) => {
+    this._offers = this._allOffers.find((x) => x.type === evt.target.value)['offers']
+    this.updateElement({type: evt.target.value, offers: []})
+  };
+
+  _restoreHandlers = () => {
+    this._setInnerHandlers();
+    this._setDatepickerTo();
+    this._setDatepickerFrom();
+    this.setFormSubmitHandler(this._callback.submit);
+    this.setButtonClickHandler(this._callback.click);
+    this.setDeleteClickHandler(this._callback.delete);
+  };
+
+  _setInnerHandlers = () => {
+    this.element.querySelector('.event__type-group').addEventListener('change',  this._typeChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this._destinationChangeHandler);
+    this.element.querySelector('.event__section--offers').addEventListener('change', this._offersChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this._priceChangeHandler);
+  };
+
+  _pointDateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  _pointDateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
   static parsePointToState = (point) => ({...point,
     dateTo: dayjs(point.dateTo).toDate(),
     dateFrom: dayjs(point.dateFrom).toDate(),
@@ -360,8 +375,7 @@ class EditPointView extends AbstractStatefulView {
     delete point.isDeleting;
     
     return point
-  }
+  };
 }
-
 
 export default EditPointView;

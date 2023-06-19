@@ -6,26 +6,10 @@ class PointsModel extends Observable {
     super();
     this._pointsApiService = pointsApiService;
     this._points = [];
-  }
+  };
 
   get points() {
     return this._points;
-  }
-
-  _adaptToClient = (point) => {
-    const adaptedPoint = {...point,
-      basePrice: point['base_price'],
-      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
-      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
-      isFavorite: point['is_favorite']
-    };
-
-    delete adaptedPoint['base_price'];
-    delete adaptedPoint['date_from'];
-    delete adaptedPoint['date_to'];
-    delete adaptedPoint['is_favorite'];
-
-    return adaptedPoint;
   };
 
   init = async () => {
@@ -59,7 +43,7 @@ class PointsModel extends Observable {
     } catch(err) {
       throw new Error('Can\'t update point');
     }
-  }
+  };
 
   addPoint = async (updateType, update) => {
     try {
@@ -71,7 +55,7 @@ class PointsModel extends Observable {
     } catch(err) {
       throw new Error('Can\'t add point');
     }
-  }
+  };
 
   deletePoint = async (updateType, update) => {
     const deletedIndex = this._points.findIndex((point) => point.id === update.id);
@@ -90,7 +74,24 @@ class PointsModel extends Observable {
     } catch(err) {
       throw new Error('Can\'t delete point');
     }
-  }
+  };
+
+  _adaptToClient = (point) => {
+    const adaptedPoint = {...point,
+      basePrice: point['base_price'],
+      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
+      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
+      isFavorite: point['is_favorite']
+    };
+
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['is_favorite'];
+
+    return adaptedPoint;
+  };
 }
 
 export default PointsModel;
+
