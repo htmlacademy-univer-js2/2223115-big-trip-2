@@ -153,6 +153,23 @@ class PointPresenter {
           });
         }
     };
+
+    setAborting = () => {
+        if (this._mode === Mode.DEFAULT) {
+          this._pointComponent.shake();
+          return;
+        }
+    
+        const resetFormState = () => {
+          this._pointEditComponent.updateElement({
+            isDisabled: false,
+            isSaving: false,
+            isDeleting: false,
+          });
+        };
+    
+        this._pointEditComponent.shake(resetFormState);
+      };
 }
 
 export default PointPresenter;

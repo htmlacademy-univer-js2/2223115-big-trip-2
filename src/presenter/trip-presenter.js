@@ -59,19 +59,31 @@ class TripPresenter {
     this._pointPresenter.forEach((presenter) => presenter.resetView())
   }
 
-  _handleViewAction = (actionType, updateType, update) => {
+  _handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this._pointPresenter.get(update.id).setSaving();
-        this._pointsModel.updatePoint(updateType, update);
+        try {
+          await this._pointsModel.updatePoint(updateType, update);
+        } catch(err) {
+          this._pointPresenter.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
         this._newPointPresenter.setSaving();
-        this._pointsModel.addPoint(updateType, update);
+        try {
+          await this._pointsModel.addPoint(updateType, update);
+        } catch(err) {
+          this._newPointPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
         this._pointPresenter.get(update.id).setDeleting();
-        this._pointsModel.deletePoint(updateType, update);
+        try {
+          await this._pointsModel.deletePoint(updateType, update);
+        } catch(err) {
+          this._pointPresenter.get(update.id).setAborting();
+        }
         break;
     }
   };
