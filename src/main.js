@@ -34,3 +34,4 @@ newPointButtonComponent.setClickHandler(handleNewPointButtonClick)
 
 filterPresenter.init();
 tripPresenter.init();
+pointsModel.init();

@@ -1,38 +1,14 @@
-import { COUNT_POINT } from '../const';
 import Observable from '../framework/observable';
-import generatePoint from '../fish-data/point';
-import offersByType from '../fish-data/offer';
-import destinations from '../fish-data/destination';
 
 class PointsModel extends Observable {
   constructor(pointsApiService) {
     super();
     this._pointsApiService = pointsApiService;
-    this._points = Array.from({length: COUNT_POINT}, generatePoint);
-    this._offers = offersByType;
-    this._destinations = destinations;
-
-    this._pointsApiService.points.then((points) => {
-      console.log(points.map(this._adaptToClient));
-    });
+    this._points = [];
   }
 
   get points() {
     return this._points;
-  }
-
-  getOffers(point) {
-    if (point) {
-      return this._offers.find((x) => x.type === point['type'])['offers'];
-    }
-    return this._offers;
-  }
-
-  getDestination(point) {
-    if (point){
-      return this._destinations.find((x) => x.id === point['destination']);
-    }
-    return this._destinations;
   }
 
   _adaptToClient = (point) => {
@@ -49,6 +25,15 @@ class PointsModel extends Observable {
     delete adaptedPoint['is_favorite'];
 
     return adaptedPoint;
+  };
+
+  init = async () => {
+    try {
+      const points = await this._pointsApiService.points;
+      this._points = points.map(this._adaptToClient);
+    } catch(err) {
+      this._points = [];
+    }
   };
 
   updatePoint = (updateType, update) => {

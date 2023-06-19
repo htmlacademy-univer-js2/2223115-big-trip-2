@@ -1,7 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view'
 import { humanizeDate, humanizeTime, getFinalPrice } from '../utils';
-import offersByType from '../fish-data/offer';
-import destinations from '../fish-data/destination';
 import { CITIES } from '../const';
 import dayjs from 'dayjs';
 import he from 'he';
