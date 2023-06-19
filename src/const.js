@@ -43,12 +43,18 @@ const UpdateType = {
   INIT: 'INIT'
 }
 
+const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+};
+
 export {
   TYPES_POINT,
   FILTERS_TYPE,
   FILTERS_MESSAGE,
   SORTED_TYPE,
   UserAction,
-  UpdateType
+  UpdateType,
+  Method
 };
 
